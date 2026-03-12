@@ -1,0 +1,7 @@
+.DS_Store
+.env
+.tmp_picset_en.json
+.tmp_picset_index.js
+.tmp_picset_zh.json
+node_modules
+npm-debug.log
