@@ -43,21 +43,11 @@
                 <h2>产品图</h2>
                 <p>上传清晰、主体完整的产品图片</p>
               </div>
-              <div class="upload-count">1/6</div>
+              <div id="upload-count" class="upload-count">0/6</div>
             </div>
 
-            <div class="upload-gallery">
-              <div class="upload-thumb upload-thumb-active">
-                <label class="thumb-input" for="product-image">
-                  <input id="product-image" type="file" accept="image/*" />
-                  <span id="upload-copy" class="thumb-copy">点击上传</span>
-                  <img id="product-preview" class="product-preview hidden" alt="产品预览" />
-                </label>
-              </div>
-              <label class="upload-thumb upload-thumb-empty" for="product-image">
-                <span class="plus-sign">+</span>
-              </label>
-            </div>
+            <input id="product-image" type="file" accept="image/*" multiple class="hidden-file-input" />
+            <div id="upload-gallery" class="upload-gallery"></div>
           </section>
 
           <section class="panel-card">

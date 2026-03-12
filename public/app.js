@@ -1,5 +1,7 @@
+const MAX_UPLOADS = 6;
+
 const state = {
-  productImage: null,
+  productImages: [],
   blueprint: null,
   productSummary: "",
   stage: "input"
@@ -7,8 +9,8 @@ const state = {
 
 const nodes = {
   fileInput: document.querySelector("#product-image"),
-  uploadCopy: document.querySelector("#upload-copy"),
-  productPreview: document.querySelector("#product-preview"),
+  uploadGallery: document.querySelector("#upload-gallery"),
+  uploadCount: document.querySelector("#upload-count"),
   brief: document.querySelector("#brief"),
   targetLanguage: document.querySelector("#target-language"),
   model: document.querySelector("#model"),
@@ -150,6 +152,52 @@ function escapeHtml(text) {
     .replaceAll('"', "&quot;");
 }
 
+function updateUploadCount() {
+  nodes.uploadCount.textContent = `${state.productImages.length}/${MAX_UPLOADS}`;
+}
+
+function triggerFilePicker() {
+  if (state.productImages.length >= MAX_UPLOADS) return;
+  nodes.fileInput.click();
+}
+
+function renderUploadGallery() {
+  nodes.uploadGallery.innerHTML = "";
+
+  if (state.productImages.length === 0) {
+    const empty = document.createElement("button");
+    empty.type = "button";
+    empty.className = "upload-thumb upload-thumb-picker upload-thumb-large";
+    empty.innerHTML = `
+      <span class="plus-sign">+</span>
+      <span class="thumb-copy">点击上传产品图</span>
+    `;
+    empty.addEventListener("click", triggerFilePicker);
+    nodes.uploadGallery.appendChild(empty);
+  } else {
+    state.productImages.forEach((image, index) => {
+      const thumb = document.createElement("div");
+      thumb.className = "upload-thumb upload-thumb-active";
+      thumb.innerHTML = `
+        <img class="product-preview" src="${image.dataUrl}" alt="${escapeHtml(image.name)}" />
+        <span class="thumb-index">${index + 1}</span>
+      `;
+      nodes.uploadGallery.appendChild(thumb);
+    });
+
+    if (state.productImages.length < MAX_UPLOADS) {
+      const addMore = document.createElement("button");
+      addMore.type = "button";
+      addMore.className = "upload-thumb upload-thumb-picker upload-thumb-empty";
+      addMore.innerHTML = `<span class="plus-sign">+</span>`;
+      addMore.addEventListener("click", triggerFilePicker);
+      nodes.uploadGallery.appendChild(addMore);
+    }
+  }
+
+  updateUploadCount();
+}
+
 async function postJson(url, payload) {
   const response = await fetch(url, {
     method: "POST",
@@ -176,7 +224,7 @@ async function handleAnalyze() {
   try {
     const data = await postJson("/api/analyze", {
       ...options,
-      productImage: state.productImage
+      productImages: state.productImages.map((item) => item.dataUrl)
     });
 
     state.blueprint = data.blueprint;
@@ -228,18 +276,32 @@ async function handleGenerate() {
 }
 
 nodes.fileInput.addEventListener("change", async (event) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
+  const files = [...(event.target.files || [])].slice(0, MAX_UPLOADS - state.productImages.length);
+  if (!files.length) return;
 
-  state.productImage = await fileToDataUrl(file);
-  nodes.productPreview.src = state.productImage;
-  nodes.productPreview.classList.remove("hidden");
-  nodes.uploadCopy.classList.add("hidden");
-  nodes.uploadCopy.textContent = file.name;
-  showDebug(`已载入产品图：${file.name}`);
+  try {
+    const newImages = await Promise.all(
+      files.map(async (file) => ({
+        name: file.name,
+        dataUrl: await fileToDataUrl(file)
+      }))
+    );
+    state.productImages.push(...newImages);
+    renderUploadGallery();
+    showDebug(`已载入 ${newImages.length} 张产品图，当前共 ${state.productImages.length} 张。`);
+  } catch (error) {
+    showDebug(`图片读取失败：${error.message}`, "error");
+  } finally {
+    event.target.value = "";
+  }
 });
 
 nodes.analyzeBtn.addEventListener("click", handleAnalyze);
 nodes.generateBtn.addEventListener("click", handleGenerate);
 
+renderUploadGallery();
+renderSpecs("");
+renderProductSummary("");
+resetResultsPlaceholder();
 setStage("input");
+hideDebug();

@@ -243,7 +243,7 @@ textarea {
 
 .upload-gallery {
   display: grid;
-  grid-template-columns: 112px 112px;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 112px));
   gap: 12px;
   margin-top: 18px;
 }
@@ -257,21 +257,12 @@ textarea {
   overflow: hidden;
 }
 
+.hidden-file-input {
+  display: none;
+}
+
 .upload-thumb-active {
   border-style: solid;
-}
-
-.thumb-input {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.thumb-input input {
-  display: none;
 }
 
 .thumb-copy {
@@ -296,11 +287,43 @@ textarea {
   background: white;
 }
 
-.upload-thumb-empty {
+.thumb-index {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(17, 18, 25, 0.78);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.upload-thumb-picker {
   display: grid;
   place-items: center;
+  gap: 8px;
   color: var(--muted);
   cursor: pointer;
+  border-style: dashed;
+}
+
+.upload-thumb-picker:hover {
+  border-color: rgba(47, 109, 246, 0.32);
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.upload-thumb-large {
+  min-height: 160px;
+  padding: 16px;
+}
+
+.upload-thumb-empty {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .plus-sign {
@@ -672,7 +695,7 @@ textarea {
   }
 
   .upload-gallery {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cta-button {

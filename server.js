@@ -368,8 +368,14 @@ function createFallbackBlueprint({ brief, count, targetLanguage, productSummary 
   };
 }
 
-async function analyzeProductImage(productImage, brief, targetLanguage) {
-  if (!productImage) return null;
+async function analyzeProductImage(productImages, brief, targetLanguage) {
+  const normalizedImages = Array.isArray(productImages)
+    ? productImages.filter(Boolean)
+    : productImages
+      ? [productImages]
+      : [];
+
+  if (!normalizedImages.length) return null;
 
   const content = await callChatCompletion({
     model: ARK_VISION_MODEL,
@@ -386,7 +392,7 @@ async function analyzeProductImage(productImage, brief, targetLanguage) {
           {
             type: "text",
             text: [
-              "请分析这张产品图，输出简洁但信息密度高的中文要点：",
+              `请分析这${normalizedImages.length > 1 ? "组" : "张"}产品图，综合输出简洁但信息密度高的中文要点：`,
               "1. 产品品类与用途",
               "2. 形状结构与关键部件",
               "3. 材质与表面质感",
@@ -399,12 +405,12 @@ async function analyzeProductImage(productImage, brief, targetLanguage) {
               "9. 明确指出：生成时绝对不能变更的产品身份信息"
             ].join("\n")
           },
-          {
+          ...normalizedImages.map((productImage) => ({
             type: "image_url",
             image_url: {
               url: normalizeDataUrl(productImage)
             }
-          }
+          }))
         ]
       }
     ]
@@ -413,12 +419,12 @@ async function analyzeProductImage(productImage, brief, targetLanguage) {
   return content.trim();
 }
 
-async function buildBlueprint({ brief, count, targetLanguage, productImage }) {
+async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
   let productSummary = null;
   try {
-    productSummary = await analyzeProductImage(productImage, brief, targetLanguage);
+    productSummary = await analyzeProductImage(productImages, brief, targetLanguage);
   } catch (error) {
-    if (productImage) {
+    if (Array.isArray(productImages) ? productImages.length : productImages) {
       throw new Error(`产品图分析失败：${error.message}`);
     }
   }
@@ -525,13 +531,17 @@ async function handleAnalyze(req, res) {
     const brief = String(body.brief || "").trim();
     const count = Math.max(1, Math.min(15, Number(body.count || 4)));
     const targetLanguage = String(body.targetLanguage || "zh");
-    const productImage = body.productImage || null;
+    const productImages = Array.isArray(body.productImages)
+      ? body.productImages.filter(Boolean).slice(0, 6)
+      : body.productImage
+        ? [body.productImage]
+        : [];
 
     const result = await buildBlueprint({
       brief,
       count,
       targetLanguage,
-      productImage
+      productImages
     });
 
     json(res, 200, {
