@@ -1,0 +1,5 @@
+{
+  "build_command": "",
+  "install_command": "",
+  "start_command": "node server.js"
+}

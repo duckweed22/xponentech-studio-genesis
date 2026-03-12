@@ -15,6 +15,35 @@ ARK_API_KEY=你的火山引擎ArkKey node server.js
 
 打开 [http://localhost:3000](http://localhost:3000)。
 
+## Zeabur 部署
+
+这个项目可以直接从 GitHub 导入到 Zeabur。
+
+1. 在 Zeabur 新建 Project
+2. 选择 GitHub 仓库：`duckweed22/xponentech-studio-genesis`
+3. 让 Zeabur 自动识别为 Node.js 服务
+4. 添加环境变量：
+
+```bash
+ARK_API_KEY=你的火山引擎 Ark Key
+```
+
+可选环境变量：
+
+```bash
+ARK_TEXT_MODEL=doubao-1-5-pro-32k-250115
+ARK_VISION_MODEL=doubao-seed-1-6-vision-250815
+ARK_IMAGE_MODEL=doubao-seedream-4-0-250828
+MAX_CONCURRENCY=2
+```
+
+说明：
+
+- 服务默认监听 `0.0.0.0:$PORT`，可直接运行在 Zeabur 容器内
+- 启动命令已固定为 `node server.js`
+- 不要把 `.env` 提交到 GitHub，把密钥只放在 Zeabur 环境变量里
+- 部署完成后，Zeabur 会分配一个公网域名
+
 ## 当前默认模型
 
 - 视觉分析: `doubao-seed-1-6-vision-250815`

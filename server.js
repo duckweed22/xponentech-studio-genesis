@@ -41,7 +41,7 @@ try {
 }
 
 const PORT = Number(process.env.PORT || 3000);
-const HOST = process.env.HOST || "127.0.0.1";
+const HOST = process.env.HOST || "0.0.0.0";
 const ARK_BASE_URL = process.env.ARK_BASE_URL || "https://ark.cn-beijing.volces.com/api/v3";
 const ARK_API_KEY = process.env.ARK_API_KEY || "";
 const ARK_TEXT_MODEL = process.env.ARK_TEXT_MODEL || "doubao-1-5-pro-32k-250115";
