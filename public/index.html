@@ -151,6 +151,15 @@
             </div>
 
             <section id="debug-banner" class="debug-banner hidden" aria-live="polite"></section>
+            <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
+              <div class="progress-meta">
+                <strong id="progress-label">处理中</strong>
+                <span id="progress-value">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="progress-fill" class="progress-fill"></div>
+              </div>
+            </section>
 
             <div class="workspace">
               <div class="workspace-row dual">
@@ -161,7 +170,7 @@
                       <p>所有图片遵循的统一视觉标准</p>
                     </div>
                   </div>
-                  <pre id="design-specs" class="spec-output empty-state">分析后会显示整体设计规范。</pre>
+                  <pre id="design-specs" class="spec-output fixed-pane empty-state">分析后会显示整体设计规范。</pre>
                 </article>
 
                 <article class="info-card">
@@ -171,7 +180,7 @@
                       <p>来自视觉模型的产品理解</p>
                     </div>
                   </div>
-                  <pre id="product-summary" class="spec-output empty-state">上传产品图后会提取材质、颜色、标签和关键识别特征。</pre>
+                  <pre id="product-summary" class="spec-output fixed-pane empty-state">上传产品图后会提取材质、颜色、标签和关键识别特征。</pre>
                 </article>
               </div>
 
@@ -182,7 +191,7 @@
                     <p>共多张图片，点击可编辑标题、描述和详细设计内容</p>
                   </div>
                 </div>
-                <div id="plan-list" class="plan-list empty-state">分析后会生成每一张图的规划。</div>
+                <div id="plan-list" class="plan-list fixed-pane empty-state">分析后会生成每一张图的规划。</div>
               </article>
 
               <article class="info-card">

@@ -303,6 +303,28 @@ textarea {
   font-weight: 700;
 }
 
+.thumb-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(17, 18, 25, 0.76);
+  color: white;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.thumb-delete:hover {
+  background: rgba(160, 35, 35, 0.88);
+}
+
 .upload-thumb-picker {
   display: grid;
   place-items: center;
@@ -534,6 +556,43 @@ textarea {
   background: rgba(240, 247, 255, 0.95);
 }
 
+.progress-panel {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.progress-meta strong {
+  font-size: 14px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(17, 18, 25, 0.08);
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1d2333 0%, #2f6df6 100%);
+  transition: width 220ms ease;
+}
+
 .workspace {
   display: flex;
   flex-direction: column;
@@ -554,7 +613,6 @@ textarea {
 
 .spec-output {
   margin-top: 16px;
-  min-height: 220px;
   padding: 18px;
   border-radius: 22px;
   border: 1px solid var(--line-soft);
@@ -563,6 +621,11 @@ textarea {
   line-height: 1.74;
   font-family: "SF Mono", "JetBrains Mono", monospace;
   font-size: 13px;
+}
+
+.fixed-pane {
+  height: 340px;
+  overflow: auto;
 }
 
 .empty-state {
@@ -592,7 +655,9 @@ textarea {
 }
 
 .plan-content {
-  min-height: 190px;
+  min-height: 180px;
+  max-height: 180px;
+  overflow: auto;
   margin-top: 0;
 }
 
@@ -602,11 +667,13 @@ textarea {
 
 .result-card {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 14px;
   padding: 12px;
   border-radius: 24px;
   border: 1px solid var(--line-soft);
   background: rgba(247, 248, 251, 0.88);
+  min-height: 540px;
 }
 
 .result-card img {
@@ -619,7 +686,9 @@ textarea {
 
 .result-meta {
   display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 8px;
+  min-height: 0;
 }
 
 .result-meta strong {
@@ -634,7 +703,7 @@ textarea {
 }
 
 .prompt-box {
-  max-height: 168px;
+  height: 210px;
   overflow: auto;
   padding: 12px;
   border-radius: 16px;
@@ -642,6 +711,16 @@ textarea {
   color: var(--muted-strong);
   font-size: 12px;
   line-height: 1.6;
+}
+
+#plan-list.fixed-pane {
+  padding-right: 4px;
+}
+
+#result-grid.has-results {
+  max-height: 980px;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 @media (max-width: 1320px) {

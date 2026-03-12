@@ -27,9 +27,15 @@ const nodes = {
   stageTitle: document.querySelector("#stage-title"),
   stageDesc: document.querySelector("#stage-desc"),
   debugBanner: document.querySelector("#debug-banner"),
+  progressPanel: document.querySelector("#progress-panel"),
+  progressLabel: document.querySelector("#progress-label"),
+  progressValue: document.querySelector("#progress-value"),
+  progressFill: document.querySelector("#progress-fill"),
   stageNodes: [...document.querySelectorAll(".stage-node")],
   planTemplate: document.querySelector("#plan-item-template")
 };
+
+let progressTimer = null;
 
 function showDebug(message, type = "info") {
   nodes.debugBanner.textContent = message;
@@ -41,6 +47,39 @@ function hideDebug() {
   nodes.debugBanner.textContent = "";
   nodes.debugBanner.classList.add("hidden");
   nodes.debugBanner.classList.remove("is-error", "is-info");
+}
+
+function setProgress(progress, label) {
+  const value = Math.max(0, Math.min(100, Math.round(progress)));
+  if (label) nodes.progressLabel.textContent = label;
+  nodes.progressValue.textContent = `${value}%`;
+  nodes.progressFill.style.width = `${value}%`;
+  nodes.progressPanel.classList.remove("hidden");
+}
+
+function hideProgress() {
+  if (progressTimer) {
+    clearInterval(progressTimer);
+    progressTimer = null;
+  }
+  nodes.progressPanel.classList.add("hidden");
+  nodes.progressFill.style.width = "0%";
+  nodes.progressValue.textContent = "0%";
+}
+
+function startProgressSimulation(steps, intervalMs = 700) {
+  if (progressTimer) clearInterval(progressTimer);
+  let index = 0;
+  setProgress(steps[0]?.value || 0, steps[0]?.label || "处理中");
+  progressTimer = setInterval(() => {
+    index += 1;
+    if (index >= steps.length) {
+      clearInterval(progressTimer);
+      progressTimer = null;
+      return;
+    }
+    setProgress(steps[index].value, steps[index].label);
+  }, intervalMs);
 }
 
 function setStage(stage, description) {
@@ -181,7 +220,14 @@ function renderUploadGallery() {
       thumb.innerHTML = `
         <img class="product-preview" src="${image.dataUrl}" alt="${escapeHtml(image.name)}" />
         <span class="thumb-index">${index + 1}</span>
+        <button type="button" class="thumb-delete" aria-label="删除图片">×</button>
       `;
+      thumb.querySelector(".thumb-delete").addEventListener("click", (event) => {
+        event.stopPropagation();
+        state.productImages.splice(index, 1);
+        renderUploadGallery();
+        showDebug(`已删除 1 张产品图，当前共 ${state.productImages.length} 张。`);
+      });
       nodes.uploadGallery.appendChild(thumb);
     });
 
@@ -220,6 +266,16 @@ async function handleAnalyze() {
   nodes.generateBtn.disabled = true;
   resetResultsPlaceholder();
   setStage("analyzing");
+  startProgressSimulation(
+    [
+      { value: 8, label: "读取参考图" },
+      { value: 28, label: "提取产品关键信息" },
+      { value: 52, label: "生成统一设计规范" },
+      { value: 78, label: "规划详情图结构" },
+      { value: 92, label: "整理分析结果" }
+    ],
+    800
+  );
 
   try {
     const data = await postJson("/api/analyze", {
@@ -234,12 +290,17 @@ async function handleAnalyze() {
     renderProductSummary(state.productSummary);
     renderPlanList(data.blueprint.images);
     setStage("preview");
+    setProgress(100, "分析完成");
     showDebug("分析成功，已生成蓝图。");
     nodes.generateBtn.disabled = false;
   } catch (error) {
+    hideProgress();
     showDebug(`分析失败：${error.message}`, "error");
     setStage("input", `分析失败：${error.message}`);
   } finally {
+    if (state.stage === "preview") {
+      setTimeout(hideProgress, 600);
+    }
     nodes.analyzeBtn.disabled = false;
   }
 }
@@ -254,22 +315,40 @@ async function handleGenerate() {
   setStage("generating");
   nodes.resultGrid.className = "result-grid empty-state";
   nodes.resultGrid.textContent = "正在生成 prompts 与图片，请稍候。";
+  const count = Math.max(1, options.count);
+  const generateSteps = [
+    { value: 6, label: "整理图片蓝图" },
+    { value: 18, label: "编写生成提示词" }
+  ];
+  for (let index = 0; index < count; index += 1) {
+    generateSteps.push({
+      value: Math.min(95, 28 + Math.round(((index + 1) / count) * 62)),
+      label: `生成第 ${index + 1}/${count} 张图片`
+    });
+  }
+  startProgressSimulation(generateSteps, 1100);
 
   try {
     const data = await postJson("/api/generate", {
       ...options,
       blueprint: state.blueprint,
-      productSummary: state.productSummary
+      productSummary: state.productSummary,
+      productImages: state.productImages.map((item) => item.dataUrl)
     });
 
     renderResults(data.images);
+    setProgress(100, "生成完成");
     showDebug(`生成完成，共 ${data.images.length} 张。`);
     setStage("complete", `已完成 ${data.images.length} 张图片生成。`);
   } catch (error) {
+    hideProgress();
     showDebug(`生成失败：${error.message}`, "error");
     setStage("preview", `生成失败：${error.message}`);
     resetResultsPlaceholder();
   } finally {
+    if (state.stage === "complete") {
+      setTimeout(hideProgress, 600);
+    }
     nodes.analyzeBtn.disabled = false;
     nodes.generateBtn.disabled = false;
   }

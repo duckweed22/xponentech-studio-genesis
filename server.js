@@ -128,8 +128,12 @@ Hard constraints:
 - Do not replace the brand
 - Do not invent a different package structure
 - Preserve visible logo, label placement, bottle/can/jar shape, cap shape, and dominant product colors from the reference analysis
+- Preserve the exact silhouette, proportion, packaging geometry, label area ratio, closure type, and front-facing identity markers from the reference
+- If multiple reference images are provided, reconcile them into one consistent product identity and keep that identity unchanged across all outputs
+- If any detail is uncertain, simplify the background or composition instead of changing the product itself
 - If the reference analysis mentions a beverage bottle, the result must still be that beverage bottle
 - Never turn the product into an unrelated object, toy, appliance, mug, kettlebell, or abstract shape
+- The product must remain the clear primary subject and occupy enough area to make the packaging recognizable
 
 Text layout rules:
 - Keep only literal display copy
@@ -235,7 +239,7 @@ async function callChatCompletion({ model, messages, maxTokens = 4096, temperatu
   return content;
 }
 
-async function callImageGeneration({ model, prompt, size, imageUrl }) {
+async function callImageGeneration({ model, prompt, size, imageUrls }) {
   if (!ARK_API_KEY) {
     throw new Error("Missing ARK_API_KEY. Start the server with ARK_API_KEY=your_key node server.js");
   }
@@ -246,7 +250,9 @@ async function callImageGeneration({ model, prompt, size, imageUrl }) {
     size
   };
 
-  if (imageUrl) body.image = imageUrl;
+  if (Array.isArray(imageUrls) && imageUrls.length) {
+    body.image = imageUrls.length === 1 ? imageUrls[0] : imageUrls;
+  }
 
   const response = await fetch(`${ARK_BASE_URL}/images/generations`, {
     method: "POST",
@@ -400,6 +406,7 @@ async function analyzeProductImage(productImages, brief, targetLanguage) {
               "5. 包装、标签、logo、可见文字",
               "6. 必须保留的识别特征",
               "6.1 如果能识别品牌、商品名称、饮料类型、包装类型，请明确写出",
+              "6.2 请总结包装几何、标签位置比例、瓶盖或封口形式、正面主视觉锚点",
               `7. 结合这段需求补充你认为最重要的还原要求：${brief || "无额外需求"}`,
               `8. 目标语言：${targetLanguageName(targetLanguage)}`,
               "9. 明确指出：生成时绝对不能变更的产品身份信息"
@@ -448,7 +455,8 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
           `目标生成张数：${count}`,
           `目标语言：${targetLanguageName(targetLanguage)}`,
           `产品图分析：${productSummary || "无产品图分析结果，请根据需求本身规划"}`,
-          "关键要求：绝对不要改变产品品类、品牌、包装结构、主色和标签布局。"
+          "关键要求：绝对不要改变产品品类、品牌、包装结构、主色、包装几何、标签布局和正面识别锚点。",
+          "如果场景创意与产品还原发生冲突，以产品还原为最高优先级。"
         ].join("\n\n")
       }
     ]
@@ -477,7 +485,7 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
 async function buildGenerationPrompts({ blueprint, brief, targetLanguage, productSummary, count }) {
   const response = await callChatCompletion({
     model: ARK_TEXT_MODEL,
-    temperature: 0.7,
+    temperature: 0.35,
     maxTokens: 8000,
     messages: [
       {
@@ -492,6 +500,8 @@ async function buildGenerationPrompts({ blueprint, brief, targetLanguage, produc
           `Product reference analysis: ${productSummary || "N/A"}`,
           `Global design specs:\n${blueprint.design_specs}`,
           "Critical identity rule: the generated image must preserve the exact product identity from the reference analysis and must not drift into another product category.",
+          "Consistency rule: preserve silhouette, packaging geometry, closure type, label placement, logo region, dominant colors, and overall front-of-pack recognition in every output.",
+          "Fallback rule: if scene styling conflicts with product fidelity, reduce scene complexity and keep the product exact.",
           `Planned images JSON:\n${JSON.stringify(blueprint.images.slice(0, count), null, 2)}`
         ].join("\n\n")
       }
@@ -566,6 +576,11 @@ async function handleGenerate(req, res) {
     const targetLanguage = String(body.targetLanguage || "zh");
     const blueprint = body.blueprint;
     const productSummary = body.productSummary || null;
+    const productImages = Array.isArray(body.productImages)
+      ? body.productImages.filter(Boolean).slice(0, 6)
+      : body.productImage
+        ? [body.productImage]
+        : [];
     const requestedModel = String(body.model || ARK_IMAGE_MODEL);
     const ratio = String(body.ratio || "1:1");
     const resolution = String(body.resolution || "1K");
@@ -590,7 +605,8 @@ async function handleGenerate(req, res) {
         const generated = await callImageGeneration({
           model: requestedModel,
           prompt: item.prompt,
-          size
+          size,
+          imageUrls: productImages
         });
         return {
           index,
