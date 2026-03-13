@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -47,7 +48,13 @@ const ARK_API_KEY = process.env.ARK_API_KEY || "";
 const ARK_TEXT_MODEL = process.env.ARK_TEXT_MODEL || "doubao-1-5-pro-32k-250115";
 const ARK_VISION_MODEL = process.env.ARK_VISION_MODEL || "doubao-seed-1-6-vision-250815";
 const ARK_IMAGE_MODEL = process.env.ARK_IMAGE_MODEL || "doubao-seedream-4-0-250828";
-const MAX_CONCURRENCY = Math.max(1, Number(process.env.MAX_CONCURRENCY || 2));
+const ARK_TURBO_TEXT_MODEL = process.env.ARK_TURBO_TEXT_MODEL || ARK_TEXT_MODEL;
+const ARK_TURBO_VISION_MODEL = process.env.ARK_TURBO_VISION_MODEL || ARK_VISION_MODEL;
+const MAX_CONCURRENCY = Math.max(1, Number(process.env.MAX_CONCURRENCY || 3));
+const MAX_CACHE_ENTRIES = Math.max(8, Number(process.env.MAX_CACHE_ENTRIES || 24));
+const productAnalysisCache = new Map();
+const blueprintCache = new Map();
+const promptCache = new Map();
 
 const ANALYSIS_PROMPT_ZH = `
 你是一位世界级电商视觉设计总监和品牌营销专家。
@@ -95,14 +102,15 @@ design_specs 必须包含：
 - 只输出 JSON
 `.trim();
 
-const GENERATOR_PROMPT = `
+function generatorPrompt(turbo = false) {
+  return `
 You are an expert image prompt engineer specializing in e-commerce product photography.
 
 Your task:
 Generate one production-ready prompt for each planned image.
 
 Requirements:
-- Each prompt must be 250-350 words
+- Each prompt must be ${turbo ? "120-180" : "170-240"} words
 - Prompts must be written in English
 - Any rendered text inside the image must remain in the target language
 - Output must be a strict JSON array: [{"prompt":"..."}]
@@ -145,6 +153,7 @@ Output rules:
 - No markdown
 - No extra explanation
 `.trim();
+}
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -206,6 +215,23 @@ function normalizeDataUrl(dataUrl) {
   if (!dataUrl) return null;
   if (dataUrl.startsWith("data:")) return dataUrl;
   return `data:image/png;base64,${dataUrl}`;
+}
+
+function cacheKey(payload) {
+  return createHash("sha1").update(JSON.stringify(payload)).digest("hex");
+}
+
+function readCache(cache, key) {
+  return cache.get(key);
+}
+
+function writeCache(cache, key, value) {
+  cache.set(key, value);
+  if (cache.size > MAX_CACHE_ENTRIES) {
+    const firstKey = cache.keys().next().value;
+    if (firstKey) cache.delete(firstKey);
+  }
+  return value;
 }
 
 async function callChatCompletion({ model, messages, maxTokens = 4096, temperature = 0.7 }) {
@@ -374,7 +400,7 @@ function createFallbackBlueprint({ brief, count, targetLanguage, productSummary 
   };
 }
 
-async function analyzeProductImage(productImages, brief, targetLanguage) {
+async function analyzeProductImage(productImages, brief, targetLanguage, turbo = false) {
   const normalizedImages = Array.isArray(productImages)
     ? productImages.filter(Boolean)
     : productImages
@@ -382,11 +408,19 @@ async function analyzeProductImage(productImages, brief, targetLanguage) {
       : [];
 
   if (!normalizedImages.length) return null;
+  const key = cacheKey({
+    normalizedImages,
+    brief,
+    targetLanguage,
+    turbo
+  });
+  const cached = readCache(productAnalysisCache, key);
+  if (cached) return cached;
 
   const content = await callChatCompletion({
-    model: ARK_VISION_MODEL,
-    temperature: 0.2,
-    maxTokens: 1800,
+    model: turbo ? ARK_TURBO_VISION_MODEL : ARK_VISION_MODEL,
+    temperature: turbo ? 0.1 : 0.2,
+    maxTokens: turbo ? 800 : 1200,
     messages: [
       {
         role: "system",
@@ -423,13 +457,22 @@ async function analyzeProductImage(productImages, brief, targetLanguage) {
     ]
   });
 
-  return content.trim();
+  return writeCache(productAnalysisCache, key, content.trim());
 }
 
-async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
+async function buildBlueprint({ brief, count, targetLanguage, productImages, turbo = false }) {
+  const key = cacheKey({
+    brief,
+    count,
+    targetLanguage,
+    productImages,
+    turbo
+  });
+  const cached = readCache(blueprintCache, key);
+  if (cached) return cached;
   let productSummary = null;
   try {
-    productSummary = await analyzeProductImage(productImages, brief, targetLanguage);
+    productSummary = await analyzeProductImage(productImages, brief, targetLanguage, turbo);
   } catch (error) {
     if (Array.isArray(productImages) ? productImages.length : productImages) {
       throw new Error(`产品图分析失败：${error.message}`);
@@ -440,9 +483,9 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
     .replace("{{target_language_name}}", targetLanguageName(targetLanguage));
 
   const response = await callChatCompletion({
-    model: ARK_TEXT_MODEL,
-    temperature: 0.55,
-    maxTokens: 4200,
+    model: turbo ? ARK_TURBO_TEXT_MODEL : ARK_TEXT_MODEL,
+    temperature: turbo ? 0.22 : 0.4,
+    maxTokens: turbo ? 1800 : 2800,
     messages: [
       {
         role: "system",
@@ -467,30 +510,40 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages }) {
     if (!parsed?.design_specs || !Array.isArray(parsed?.images)) {
       throw new Error("Invalid blueprint structure");
     }
-    return {
+    return writeCache(blueprintCache, key, {
       blueprint: {
         design_specs: parsed.design_specs,
         images: parsed.images.slice(0, count)
       },
       productSummary
-    };
+    });
   } catch {
-    return {
+    return writeCache(blueprintCache, key, {
       blueprint: createFallbackBlueprint({ brief, count, targetLanguage, productSummary }),
       productSummary
-    };
+    });
   }
 }
 
-async function buildGenerationPrompts({ blueprint, brief, targetLanguage, productSummary, count }) {
+async function buildGenerationPrompts({ blueprint, brief, targetLanguage, productSummary, count, turbo = false }) {
+  const key = cacheKey({
+    blueprint,
+    brief,
+    targetLanguage,
+    productSummary,
+    count,
+    turbo
+  });
+  const cached = readCache(promptCache, key);
+  if (cached) return cached;
   const response = await callChatCompletion({
-    model: ARK_TEXT_MODEL,
-    temperature: 0.35,
-    maxTokens: 8000,
+    model: turbo ? ARK_TURBO_TEXT_MODEL : ARK_TEXT_MODEL,
+    temperature: turbo ? 0.12 : 0.22,
+    maxTokens: turbo ? 3200 : 5200,
     messages: [
       {
         role: "system",
-        content: GENERATOR_PROMPT
+        content: generatorPrompt(turbo)
       },
       {
         role: "user",
@@ -512,11 +565,15 @@ async function buildGenerationPrompts({ blueprint, brief, targetLanguage, produc
   if (!Array.isArray(parsed)) {
     throw new Error("Prompt generator did not return an array");
   }
-  return parsed.slice(0, count).map((item, index) => ({
-    prompt: item.prompt,
-    title: blueprint.images[index]?.title || `图片 ${index + 1}`,
-    description: blueprint.images[index]?.description || ""
-  }));
+  return writeCache(
+    promptCache,
+    key,
+    parsed.slice(0, count).map((item, index) => ({
+      prompt: item.prompt,
+      title: blueprint.images[index]?.title || `图片 ${index + 1}`,
+      description: blueprint.images[index]?.description || ""
+    }))
+  );
 }
 
 async function runWithConcurrency(items, worker, concurrency = MAX_CONCURRENCY) {
@@ -541,6 +598,7 @@ async function handleAnalyze(req, res) {
     const brief = String(body.brief || "").trim();
     const count = Math.max(1, Math.min(15, Number(body.count || 4)));
     const targetLanguage = String(body.targetLanguage || "zh");
+    const turbo = Boolean(body.turbo);
     const productImages = Array.isArray(body.productImages)
       ? body.productImages.filter(Boolean).slice(0, 6)
       : body.productImage
@@ -551,15 +609,16 @@ async function handleAnalyze(req, res) {
       brief,
       count,
       targetLanguage,
-      productImages
+      productImages,
+      turbo
     });
 
     json(res, 200, {
       blueprint: result.blueprint,
       productSummary: result.productSummary,
       models: {
-        text: ARK_TEXT_MODEL,
-        vision: ARK_VISION_MODEL,
+        text: turbo ? ARK_TURBO_TEXT_MODEL : ARK_TEXT_MODEL,
+        vision: turbo ? ARK_TURBO_VISION_MODEL : ARK_VISION_MODEL,
         image: ARK_IMAGE_MODEL
       }
     });
@@ -581,6 +640,7 @@ async function handleGenerate(req, res) {
       : body.productImage
         ? [body.productImage]
         : [];
+    const turbo = Boolean(body.turbo);
     const requestedModel = String(body.model || ARK_IMAGE_MODEL);
     const ratio = String(body.ratio || "1:1");
     const resolution = String(body.resolution || "1K");
@@ -595,10 +655,12 @@ async function handleGenerate(req, res) {
       brief,
       targetLanguage,
       productSummary,
-      count
+      count,
+      turbo
     });
 
     const size = ratioToSize(ratio, resolution);
+    const concurrency = Math.min(count, turbo ? Math.max(MAX_CONCURRENCY, 4) : MAX_CONCURRENCY);
     const images = await runWithConcurrency(
       prompts,
       async (item, index) => {
@@ -616,14 +678,15 @@ async function handleGenerate(req, res) {
           imageUrl: generated.url,
           size: generated.size
         };
-      }
+      },
+      concurrency
     );
 
     json(res, 200, {
       prompts,
       images,
       models: {
-        text: ARK_TEXT_MODEL,
+        text: turbo ? ARK_TURBO_TEXT_MODEL : ARK_TEXT_MODEL,
         image: requestedModel
       }
     });

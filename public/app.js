@@ -36,6 +36,7 @@ const nodes = {
 };
 
 let progressTimer = null;
+let progressTailTimer = null;
 
 function showDebug(message, type = "info") {
   nodes.debugBanner.textContent = message;
@@ -49,26 +50,53 @@ function hideDebug() {
   nodes.debugBanner.classList.remove("is-error", "is-info");
 }
 
-function setProgress(progress, label) {
+function setProgress(progress, label, options = {}) {
+  const { pending = false } = options;
   const value = Math.max(0, Math.min(100, Math.round(progress)));
   if (label) nodes.progressLabel.textContent = label;
   nodes.progressValue.textContent = `${value}%`;
   nodes.progressFill.style.width = `${value}%`;
   nodes.progressPanel.classList.remove("hidden");
+  nodes.progressPanel.classList.toggle("is-pending", pending);
+  nodes.progressFill.classList.toggle("is-pending", pending);
 }
 
-function hideProgress() {
+function clearProgressTimers() {
   if (progressTimer) {
     clearInterval(progressTimer);
     progressTimer = null;
   }
+  if (progressTailTimer) {
+    clearInterval(progressTailTimer);
+    progressTailTimer = null;
+  }
+}
+
+function startProgressTail(startValue, maxValue, label, intervalMs) {
+  let current = startValue;
+  setProgress(current, label, { pending: true });
+  progressTailTimer = setInterval(() => {
+    if (current >= maxValue) {
+      clearInterval(progressTailTimer);
+      progressTailTimer = null;
+      return;
+    }
+    current += current < maxValue - 2 ? 1 : 0.4;
+    setProgress(current, label, { pending: true });
+  }, intervalMs);
+}
+
+function hideProgress() {
+  clearProgressTimers();
   nodes.progressPanel.classList.add("hidden");
   nodes.progressFill.style.width = "0%";
   nodes.progressValue.textContent = "0%";
+  nodes.progressPanel.classList.remove("is-pending");
+  nodes.progressFill.classList.remove("is-pending");
 }
 
-function startProgressSimulation(steps, intervalMs = 700) {
-  if (progressTimer) clearInterval(progressTimer);
+function startProgressSimulation(steps, intervalMs = 700, pendingLabel = "等待模型返回") {
+  clearProgressTimers();
   let index = 0;
   setProgress(steps[0]?.value || 0, steps[0]?.label || "处理中");
   progressTimer = setInterval(() => {
@@ -76,6 +104,8 @@ function startProgressSimulation(steps, intervalMs = 700) {
     if (index >= steps.length) {
       clearInterval(progressTimer);
       progressTimer = null;
+      const lastValue = steps.at(-1)?.value || 90;
+      startProgressTail(lastValue, 98, pendingLabel, 1800);
       return;
     }
     setProgress(steps[index].value, steps[index].label);
@@ -261,6 +291,7 @@ async function postJson(url, payload) {
 
 async function handleAnalyze() {
   const options = collectOptions();
+  const startedAt = performance.now();
   showDebug("已点击“分析产品”，准备请求 /api/analyze ...");
   nodes.analyzeBtn.disabled = true;
   nodes.generateBtn.disabled = true;
@@ -271,10 +302,11 @@ async function handleAnalyze() {
       { value: 8, label: "读取参考图" },
       { value: 28, label: "提取产品关键信息" },
       { value: 52, label: "生成统一设计规范" },
-      { value: 78, label: "规划详情图结构" },
-      { value: 92, label: "整理分析结果" }
+      { value: 72, label: "规划详情图结构" },
+      { value: 84, label: "整理分析结果" }
     ],
-    800
+    700,
+    "等待分析模型返回"
   );
 
   try {
@@ -291,7 +323,7 @@ async function handleAnalyze() {
     renderPlanList(data.blueprint.images);
     setStage("preview");
     setProgress(100, "分析完成");
-    showDebug("分析成功，已生成蓝图。");
+    showDebug(`分析成功，已生成蓝图，用时 ${((performance.now() - startedAt) / 1000).toFixed(1)}s。`);
     nodes.generateBtn.disabled = false;
   } catch (error) {
     hideProgress();
@@ -309,6 +341,7 @@ async function handleGenerate() {
   if (!state.blueprint) return;
 
   const options = collectOptions();
+  const startedAt = performance.now();
   showDebug("已点击“确认生成”，准备请求 /api/generate ...");
   nodes.analyzeBtn.disabled = true;
   nodes.generateBtn.disabled = true;
@@ -318,15 +351,15 @@ async function handleGenerate() {
   const count = Math.max(1, options.count);
   const generateSteps = [
     { value: 6, label: "整理图片蓝图" },
-    { value: 18, label: "编写生成提示词" }
+    { value: 14, label: "编写生成提示词" }
   ];
   for (let index = 0; index < count; index += 1) {
     generateSteps.push({
-      value: Math.min(95, 28 + Math.round(((index + 1) / count) * 62)),
+      value: Math.min(88, 24 + Math.round(((index + 1) / count) * 58)),
       label: `生成第 ${index + 1}/${count} 张图片`
     });
   }
-  startProgressSimulation(generateSteps, 1100);
+  startProgressSimulation(generateSteps, 900, "等待图片模型返回");
 
   try {
     const data = await postJson("/api/generate", {
@@ -338,7 +371,7 @@ async function handleGenerate() {
 
     renderResults(data.images);
     setProgress(100, "生成完成");
-    showDebug(`生成完成，共 ${data.images.length} 张。`);
+    showDebug(`生成完成，共 ${data.images.length} 张，用时 ${((performance.now() - startedAt) / 1000).toFixed(1)}s。`);
     setStage("complete", `已完成 ${data.images.length} 张图片生成。`);
   } catch (error) {
     hideProgress();

@@ -591,6 +591,24 @@ textarea {
   border-radius: 999px;
   background: linear-gradient(90deg, #1d2333 0%, #2f6df6 100%);
   transition: width 220ms ease;
+  position: relative;
+}
+
+.progress-fill.is-pending::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.38) 50%, transparent 100%);
+  animation: progressShimmer 1.4s linear infinite;
+}
+
+@keyframes progressShimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .workspace {
