@@ -121,10 +121,10 @@ function hideProgress() {
   nodes.progressFill.classList.remove("is-pending");
 }
 
-function startProgressSimulation(steps, intervalMs = 700, pendingLabel = "等待模型返回") {
+function startProgressSimulation(steps, intervalMs = 700, pendingLabel = "Waiting for model response") {
   clearProgressTimers();
   let index = 0;
-  setProgress(steps[0]?.value || 0, steps[0]?.label || "处理中");
+  setProgress(steps[0]?.value || 0, steps[0]?.label || "Processing");
   progressTimer = setInterval(() => {
     index += 1;
     if (index >= steps.length) {
@@ -141,11 +141,11 @@ function startProgressSimulation(steps, intervalMs = 700, pendingLabel = "等待
 function setStage(stage, description) {
   state.stage = stage;
   const labels = {
-    input: ["等待输入", "上传产品图并填写要求后，点击“分析产品”开始。", 0],
-    analyzing: ["分析产品中", description || "正在调用视觉与文本模型生成整体设计蓝图。", 1],
-    preview: ["设计规划预览", description || "请确认设计规范和图片规划，然后生成图片。", 2],
-    generating: ["正在生成图片", description || "先生成 prompts，再由模型批量出图。", 3],
-    complete: ["生成完成", description || "可以查看每张图的 prompt 和输出结果。", 4]
+    input: ["Waiting for input", "Upload product images and fill in the brief, then click Analyze Product to begin.", 0],
+    analyzing: ["Analyzing product", description || "Using vision and text models to build the full design blueprint.", 1],
+    preview: ["Review design plan", description || "Review the design specs and image plan, then generate the final images.", 2],
+    generating: ["Generating images", description || "Generating prompts first, then rendering the image set.", 3],
+    complete: ["Generation complete", description || "Review each output along with its prompt and final image.", 4]
   };
   const [title, desc, activeIndex] = labels[stage];
   nodes.stageTitle.textContent = title;
@@ -177,12 +177,12 @@ function collectOptions() {
 }
 
 function renderSpecs(text) {
-  nodes.designSpecs.textContent = text || "暂无设计规范";
+  nodes.designSpecs.textContent = text || "No design specs yet.";
   nodes.designSpecs.classList.toggle("empty-state", !text);
 }
 
 function renderProductSummary(text) {
-  nodes.productSummary.textContent = text || "暂无产品分析";
+  nodes.productSummary.textContent = text || "No product analysis yet.";
   nodes.productSummary.classList.toggle("empty-state", !text);
 }
 
@@ -196,7 +196,7 @@ function renderPlanList(images) {
     const desc = fragment.querySelector(".plan-desc");
     const content = fragment.querySelector(".plan-content");
 
-    title.value = item.title || `图片 ${index + 1}`;
+    title.value = item.title || `Image ${index + 1}`;
     desc.value = item.description || "";
     content.value = item.design_content || "";
 
@@ -231,7 +231,7 @@ function renderResults(items) {
 
 function resetResultsPlaceholder() {
   nodes.resultGrid.className = "result-grid empty-state";
-  nodes.resultGrid.textContent = "生成图片后会显示在这里。";
+  nodes.resultGrid.textContent = "Generated images will appear here.";
 }
 
 function escapeHtml(text) {
@@ -260,7 +260,7 @@ function renderUploadGallery() {
     empty.className = "upload-thumb upload-thumb-picker upload-thumb-large";
     empty.innerHTML = `
       <span class="plus-sign">+</span>
-      <span class="thumb-copy">点击上传产品图</span>
+      <span class="thumb-copy">Click to upload product images</span>
     `;
     empty.addEventListener("click", triggerFilePicker);
     nodes.uploadGallery.appendChild(empty);
@@ -271,13 +271,13 @@ function renderUploadGallery() {
       thumb.innerHTML = `
         <img class="product-preview" src="${image.dataUrl}" alt="${escapeHtml(image.name)}" />
         <span class="thumb-index">${index + 1}</span>
-        <button type="button" class="thumb-delete" aria-label="删除图片">×</button>
+        <button type="button" class="thumb-delete" aria-label="Delete image">&times;</button>
       `;
       thumb.querySelector(".thumb-delete").addEventListener("click", (event) => {
         event.stopPropagation();
         state.productImages.splice(index, 1);
         renderUploadGallery();
-        showDebug(`已删除 1 张产品图，当前共 ${state.productImages.length} 张。`);
+        showDebug(`Removed 1 product image. ${state.productImages.length} image(s) remaining.`);
       });
       nodes.uploadGallery.appendChild(thumb);
     });
@@ -313,21 +313,21 @@ async function postJson(url, payload) {
 async function handleAnalyze() {
   const options = collectOptions();
   const startedAt = performance.now();
-  showDebug("已点击“分析产品”，准备请求 /api/analyze ...");
+  showDebug("Analyze Product clicked. Preparing request to /api/analyze ...");
   nodes.analyzeBtn.disabled = true;
   nodes.generateBtn.disabled = true;
   resetResultsPlaceholder();
   setStage("analyzing");
   startProgressSimulation(
     [
-      { value: 8, label: "读取参考图" },
-      { value: 28, label: "提取产品关键信息" },
-      { value: 52, label: "生成统一设计规范" },
-      { value: 72, label: "规划详情图结构" },
-      { value: 84, label: "整理分析结果" }
+      { value: 8, label: "Reading reference images" },
+      { value: 28, label: "Extracting product identity" },
+      { value: 52, label: "Building unified design specs" },
+      { value: 72, label: "Planning image layouts" },
+      { value: 84, label: "Assembling analysis results" }
     ],
     700,
-    "等待分析模型返回"
+    "Waiting for analysis model response"
   );
 
   try {
@@ -343,13 +343,13 @@ async function handleAnalyze() {
     renderProductSummary(state.productSummary);
     renderPlanList(data.blueprint.images);
     setStage("preview");
-    setProgress(100, "分析完成");
-    showDebug(`分析成功，已生成蓝图，用时 ${((performance.now() - startedAt) / 1000).toFixed(1)}s。`);
+    setProgress(100, "Analysis complete");
+    showDebug(`Analysis complete. Blueprint ready in ${((performance.now() - startedAt) / 1000).toFixed(1)}s.`);
     nodes.generateBtn.disabled = false;
   } catch (error) {
     hideProgress();
-    showDebug(`分析失败：${error.message}`, "error");
-    setStage("input", `分析失败：${error.message}`);
+    showDebug(`Analysis failed: ${error.message}`, "error");
+    setStage("input", `Analysis failed: ${error.message}`);
   } finally {
     if (state.stage === "preview") {
       setTimeout(hideProgress, 600);
@@ -363,24 +363,24 @@ async function handleGenerate() {
 
   const options = collectOptions();
   const startedAt = performance.now();
-  showDebug("已点击“确认生成”，准备请求 /api/generate ...");
+  showDebug("Generate Images clicked. Preparing request to /api/generate ...");
   nodes.analyzeBtn.disabled = true;
   nodes.generateBtn.disabled = true;
   setStage("generating");
   nodes.resultGrid.className = "result-grid empty-state";
-  nodes.resultGrid.textContent = "正在生成 prompts 与图片，请稍候。";
+  nodes.resultGrid.textContent = "Generating prompts and images. Please wait.";
   const count = Math.max(1, options.count);
   const generateSteps = [
-    { value: 6, label: "整理图片蓝图" },
-    { value: 14, label: "编写生成提示词" }
+    { value: 6, label: "Preparing image blueprint" },
+    { value: 14, label: "Writing generation prompts" }
   ];
   for (let index = 0; index < count; index += 1) {
     generateSteps.push({
       value: Math.min(88, 24 + Math.round(((index + 1) / count) * 58)),
-      label: `生成第 ${index + 1}/${count} 张图片`
+      label: `Rendering image ${index + 1}/${count}`
     });
   }
-  startProgressSimulation(generateSteps, 900, "等待图片模型返回");
+  startProgressSimulation(generateSteps, 900, "Waiting for image model response");
 
   try {
     const data = await postJson("/api/generate", {
@@ -391,13 +391,13 @@ async function handleGenerate() {
     });
 
     renderResults(data.images);
-    setProgress(100, "生成完成");
-    showDebug(`生成完成，共 ${data.images.length} 张，用时 ${((performance.now() - startedAt) / 1000).toFixed(1)}s。`);
-    setStage("complete", `已完成 ${data.images.length} 张图片生成。`);
+    setProgress(100, "Generation complete");
+    showDebug(`Generation complete. Produced ${data.images.length} image(s) in ${((performance.now() - startedAt) / 1000).toFixed(1)}s.`);
+    setStage("complete", `${data.images.length} image(s) generated successfully.`);
   } catch (error) {
     hideProgress();
-    showDebug(`生成失败：${error.message}`, "error");
-    setStage("preview", `生成失败：${error.message}`);
+    showDebug(`Generation failed: ${error.message}`, "error");
+    setStage("preview", `Generation failed: ${error.message}`);
     resetResultsPlaceholder();
   } finally {
     if (state.stage === "complete") {
@@ -421,9 +421,9 @@ nodes.fileInput.addEventListener("change", async (event) => {
     );
     state.productImages.push(...newImages);
     renderUploadGallery();
-    showDebug(`已载入 ${newImages.length} 张产品图，当前共 ${state.productImages.length} 张。`);
+    showDebug(`Loaded ${newImages.length} product image(s). ${state.productImages.length} image(s) currently queued.`);
   } catch (error) {
-    showDebug(`图片读取失败：${error.message}`, "error");
+    showDebug(`Image read failed: ${error.message}`, "error");
   } finally {
     event.target.value = "";
   }
@@ -438,16 +438,16 @@ nodes.pricingToggles.forEach((toggle) => {
     setPricingMode(mode);
     showPricingFeedback(
       mode === "subscription"
-        ? "当前为展示版订阅套餐区，按钮仅用于页面演示，不会发起真实扣费。"
-        : "当前为展示版积分购买区，按钮仅用于页面演示，不会发起真实支付。"
+        ? "This is a display-only subscription section. Buttons are for UI preview only and will not trigger real billing."
+        : "This is a display-only credit purchase section. Buttons are for UI preview only and will not trigger real payment."
     );
   });
 });
 
 nodes.pricingActions.forEach((button) => {
   button.addEventListener("click", () => {
-    const label = button.dataset.planLabel || "当前套餐";
-    showPricingFeedback(`已打开 ${label} 的展示入口。当前版本仅保留定价展示，未接入真实支付。`);
+    const label = button.dataset.planLabel || "Current plan";
+    showPricingFeedback(`Opened the preview entry for ${label}. This release keeps pricing as a showcase only and does not process real payments.`);
   });
 });
 

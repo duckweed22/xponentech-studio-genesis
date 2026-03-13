@@ -57,15 +57,15 @@ const blueprintCache = new Map();
 const promptCache = new Map();
 
 const ANALYSIS_PROMPT_ZH = `
-你是一位世界级电商视觉设计总监和品牌营销专家。
+You are a world-class e-commerce visual design director and brand strategist.
 
-你的任务：
-1. 分析上传的产品图片，识别产品类型、材质、结构、颜色、包装、标签、logo、可见文字。
-2. 结合用户输入的产品信息、卖点、目标人群、风格要求，制定一套详情组图方案。
-3. 为正好 {{image_count}} 张图片制定独立且不重复的设计计划。
-4. 输出严格 JSON，不要任何额外解释。
+Your tasks:
+1. Analyze the uploaded product image(s) and identify the product category, material, structure, color palette, packaging, labels, logo, and visible text.
+2. Combine the user's brief, selling points, target audience, and style goals into a complete detail-image strategy.
+3. Create distinct, non-repetitive design plans for exactly {{image_count}} images.
+4. Return strict JSON only, with no extra explanation.
 
-输出格式：
+Output format:
 {
   "design_specs": "...",
   "images": [
@@ -77,14 +77,14 @@ const ANALYSIS_PROMPT_ZH = `
   ]
 }
 
-design_specs 必须包含：
+design_specs must include:
 - Color System
 - Font System
 - Visual Language
 - Photography Style
 - Quality Requirements
 
-每张图片的 design_content 必须包含：
+Each image design_content must include:
 - Design Goal
 - Product Presence
 - Inset Image Elements
@@ -94,13 +94,13 @@ design_specs 必须包含：
 - Text Content
 - Atmosphere
 
-约束：
-- 必须忠实保留产品本身、包装、标签、logo、产品文字
-- 如果用户要求无字，则 Text Content 写 None，Font System 写 无
-- 如果用户没有选择无字，则 Text Content 必须包含可实际落到图片里的简洁营销文案
-- design_specs/title/description 使用中文
-- design_content 中的文案内容使用 {{target_language_name}}
-- 只输出 JSON
+Constraints:
+- Preserve the real product, packaging, labels, logo, and visible product text faithfully.
+- If the user requests no text, set Text Content to None and Font System to None.
+- If the user does not choose no text, Text Content must contain concise marketing copy that could realistically be rendered in the image.
+- design_specs, title, and description must be written in English.
+- Any actual rendered copy described inside design_content must use {{target_language_name}}.
+- Output JSON only.
 `.trim();
 
 function generatorPrompt(turbo = false) {
@@ -146,7 +146,7 @@ Hard constraints:
 
 Text layout rules:
 - Keep only literal display copy
-- Strip labels like Main Title:, Subtitle:, 主标题：
+- Strip labels like Main Title: and Subtitle:
 - If the target language is No Text or the plan says no text, leave Text layout empty
 - Otherwise, include short headline/subheadline style marketing copy in the requested target language
 
@@ -310,20 +310,20 @@ async function callImageGeneration({ model, prompt, size, imageUrls }) {
 
 function targetLanguageName(targetLanguage) {
   const map = {
-    zh: "中文",
+    zh: "Chinese",
     en: "English",
-    es: "Español",
+    es: "Spanish",
     de: "Deutsch",
-    pt: "Português",
+    pt: "Portuguese",
     it: "Italiano",
-    ru: "Русский",
-    ja: "日本語",
-    ko: "한국어",
-    fr: "Français",
-    ar: "العربية",
+    ru: "Russian",
+    ja: "Japanese",
+    ko: "Korean",
+    fr: "French",
+    ar: "Arabic",
     none: "No Text"
   };
-  return map[targetLanguage] || targetLanguage || "中文";
+  return map[targetLanguage] || targetLanguage || "English";
 }
 
 function ratioToSize(ratio, resolution) {
@@ -379,34 +379,34 @@ function ratioToSize(ratio, resolution) {
 }
 
 function createFallbackBlueprint({ brief, count, targetLanguage, productSummary }) {
-  const baseSummary = productSummary || "产品主体清晰、包装完整、适合电商详情页呈现";
+  const baseSummary = productSummary || "The main product is clearly visible, the packaging is complete, and it is suitable for e-commerce detail-page presentation.";
   const noText = targetLanguage === "none";
   const images = Array.from({ length: count }, (_, index) => ({
-    title: `详情图 ${index + 1}`,
-    description: `围绕核心卖点构建第 ${index + 1} 张场景图`,
+    title: `Detail Image ${index + 1}`,
+    description: `Scene ${index + 1} built around a core selling point`,
     design_content: [
-      `Design Goal: 以第 ${index + 1} 个卖点视角强化转化`,
-      "Product Presence: 主体产品必须清晰出现，保持真实结构和标签",
-      "Inset Image Elements: 如有必要，可加入局部放大或材质细节",
-      index === 0 ? "Composition: 居中英雄构图，建立产品识别" : "Composition: 有层次的信息化构图，突出对比和节奏",
-      `Display Focus / Selling Points: ${brief || "强调产品卖点、品质感与购买理由"}`,
-      "Background / Decorations: 干净商业化背景，少量高质感装饰元素",
-      `Text Content: ${noText ? "None" : `以${targetLanguageName(targetLanguage)}输出简洁主标题和副标题`}`,
-      "Atmosphere: 专业、可信、高级、适合电商转化"
+      `Design Goal: Strengthen conversion through selling point angle ${index + 1}.`,
+      "Product Presence: The product must remain clearly visible with its real structure, packaging, and label details preserved.",
+      "Inset Image Elements: Add detail crops or material close-ups only when they help the concept.",
+      index === 0
+        ? "Composition: Centered hero composition that establishes instant product recognition."
+        : "Composition: Structured informational layout with clear visual hierarchy and contrast.",
+      `Display Focus / Selling Points: ${brief || "Highlight the product benefits, premium feel, and reasons to buy."}`,
+      "Background / Decorations: Clean commercial background with a small number of polished decorative accents.",
+      `Text Content: ${noText ? "None" : `Use concise headline and supporting copy in ${targetLanguageName(targetLanguage)}.`}`,
+      "Atmosphere: Professional, trustworthy, premium, and conversion-focused."
     ].join("\n")
   }));
 
   return {
     design_specs: [
-      "Color System: 以产品主色为核心，辅以中性高级色",
+      "Color System: Build around the product's dominant colors with refined neutral support tones.",
       noText
-        ? "Font System: 无"
-        : targetLanguage === "en"
-          ? "Font System: Clean Latin sans-serif for marketing copy"
-          : "Font System: 干净现代的电商无衬线字体体系",
-      "Visual Language: 高级电商海报风格，信息清晰，结构稳健",
-      "Photography Style: 柔和商业布光，清楚展示材质与轮廓",
-      `Quality Requirements: 高清、真实、统一，严格保持产品识别信息。Product summary: ${baseSummary}`
+        ? "Font System: None"
+        : "Font System: Clean, modern e-commerce sans-serif system appropriate for the target language.",
+      "Visual Language: Premium e-commerce poster style with clear information hierarchy and stable composition.",
+      "Photography Style: Soft commercial lighting that clearly reveals material texture and product form.",
+      `Quality Requirements: High resolution, realistic rendering, consistent styling, and strict preservation of product identity. Product summary: ${baseSummary}`
     ].join("\n"),
     images
   };
@@ -444,18 +444,18 @@ async function analyzeProductImage(productImages, brief, targetLanguage, turbo =
           {
             type: "text",
             text: [
-              `请分析这${normalizedImages.length > 1 ? "组" : "张"}产品图，综合输出简洁但信息密度高的中文要点：`,
-              "1. 产品品类与用途",
-              "2. 形状结构与关键部件",
-              "3. 材质与表面质感",
-              "4. 主色与辅助色",
-              "5. 包装、标签、logo、可见文字",
-              "6. 必须保留的识别特征",
-              "6.1 如果能识别品牌、商品名称、饮料类型、包装类型，请明确写出",
-              "6.2 请总结包装几何、标签位置比例、瓶盖或封口形式、正面主视觉锚点",
-              `7. 结合这段需求补充你认为最重要的还原要求：${brief || "无额外需求"}`,
-              `8. 目标语言：${targetLanguageName(targetLanguage)}`,
-              "9. 明确指出：生成时绝对不能变更的产品身份信息"
+              `Analyze these product image${normalizedImages.length > 1 ? "s" : ""} and return concise, high-density notes in English:`,
+              "1. Product category and use case",
+              "2. Shape, structure, and key components",
+              "3. Material and surface texture",
+              "4. Primary and secondary colors",
+              "5. Packaging, labels, logo, and visible text",
+              "6. Non-negotiable identity traits that must be preserved",
+              "6.1 If you can identify the brand, product name, beverage type, or packaging type, state them clearly",
+              "6.2 Summarize packaging geometry, label placement ratio, cap or closure style, and front-facing identity anchors",
+              `7. Add the most important reconstruction requirements based on this brief: ${brief || "No additional brief provided"}`,
+              `8. Target language for rendered copy: ${targetLanguageName(targetLanguage)}`,
+              "9. State clearly which product identity details must never change during generation"
             ].join("\n")
           },
           ...normalizedImages.map((productImage) => ({
@@ -487,7 +487,7 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages, tur
     productSummary = await analyzeProductImage(productImages, brief, targetLanguage, turbo);
   } catch (error) {
     if (Array.isArray(productImages) ? productImages.length : productImages) {
-      throw new Error(`产品图分析失败：${error.message}`);
+      throw new Error(`Product image analysis failed: ${error.message}`);
     }
   }
   const prompt = ANALYSIS_PROMPT_ZH
@@ -506,12 +506,12 @@ async function buildBlueprint({ brief, count, targetLanguage, productImages, tur
       {
         role: "user",
         content: [
-          `用户需求：${brief || "未填写"}`,
-          `目标生成张数：${count}`,
-          `目标语言：${targetLanguageName(targetLanguage)}`,
-          `产品图分析：${productSummary || "无产品图分析结果，请根据需求本身规划"}`,
-          "关键要求：绝对不要改变产品品类、品牌、包装结构、主色、包装几何、标签布局和正面识别锚点。",
-          "如果场景创意与产品还原发生冲突，以产品还原为最高优先级。"
+          `User brief: ${brief || "Not provided"}`,
+          `Target image count: ${count}`,
+          `Target language: ${targetLanguageName(targetLanguage)}`,
+          `Product analysis: ${productSummary || "No product image analysis available. Plan from the brief alone."}`,
+          "Critical rule: do not change the product category, brand, packaging structure, dominant colors, packaging geometry, label layout, or front-facing identity anchors.",
+          "If scene creativity conflicts with product fidelity, preserving the original product identity always takes priority."
         ].join("\n\n")
       }
     ]
@@ -585,7 +585,7 @@ async function buildGenerationPrompts({ blueprint, brief, targetLanguage, produc
     key,
     parsed.slice(0, count).map((item, index) => ({
       prompt: item.prompt,
-      title: blueprint.images[index]?.title || `图片 ${index + 1}`,
+      title: blueprint.images[index]?.title || `Image ${index + 1}`,
       description: blueprint.images[index]?.description || ""
     }))
   );
@@ -612,7 +612,7 @@ async function handleAnalyze(req, res) {
     const body = await readJsonBody(req);
     const brief = String(body.brief || "").trim();
     const count = Math.max(1, Math.min(15, Number(body.count || 4)));
-    const targetLanguage = String(body.targetLanguage || "zh");
+    const targetLanguage = String(body.targetLanguage || "en");
     const turbo = Boolean(body.turbo);
     const productImages = Array.isArray(body.productImages)
       ? body.productImages.filter(Boolean).slice(0, 6)
@@ -647,7 +647,7 @@ async function handleGenerate(req, res) {
   try {
     const body = await readJsonBody(req);
     const brief = String(body.brief || "").trim();
-    const targetLanguage = String(body.targetLanguage || "zh");
+    const targetLanguage = String(body.targetLanguage || "en");
     const blueprint = body.blueprint;
     const productSummary = body.productSummary || null;
     const productImages = Array.isArray(body.productImages)
