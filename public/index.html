@@ -14,24 +14,23 @@
       <header class="page-hero">
         <div class="hero-badge">
           <span class="hero-badge-dot"></span>
-          <span>XponenTech AI 全品类组图</span>
+          <span>XponenTech AI 鍏ㄥ搧绫荤粍鍥?/span>
         </div>
         <p class="brand-mark">XponenTech</p>
-        <h1>一键生成详情图组</h1>
+        <h1>涓€閿敓鎴愯鎯呭浘缁?/h1>
         <p class="hero-copy">
-          上传产品图，AI 智能分析产品特征，自动生成多角度、多场景的电商详情图组。
-        </p>
+          涓婁紶浜у搧鍥撅紝AI 鏅鸿兘鍒嗘瀽浜у搧鐗瑰緛锛岃嚜鍔ㄧ敓鎴愬瑙掑害銆佸鍦烘櫙鐨勭數鍟嗚鎯呭浘缁勩€?        </p>
 
-        <section class="stage-rail" aria-label="生成阶段">
-          <div class="stage-node active"><span>1</span><strong>输入</strong></div>
+        <section class="stage-rail" aria-label="鐢熸垚闃舵">
+          <div class="stage-node active"><span>1</span><strong>杈撳叆</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>2</span><strong>分析中</strong></div>
+          <div class="stage-node"><span>2</span><strong>鍒嗘瀽涓?/strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>3</span><strong>确认规划</strong></div>
+          <div class="stage-node"><span>3</span><strong>纭瑙勫垝</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>4</span><strong>生成中</strong></div>
+          <div class="stage-node"><span>4</span><strong>鐢熸垚涓?/strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>5</span><strong>完成</strong></div>
+          <div class="stage-node"><span>5</span><strong>瀹屾垚</strong></div>
         </section>
       </header>
 
@@ -40,8 +39,8 @@
           <section class="panel-card media-panel">
             <div class="panel-head compact">
               <div>
-                <h2>产品图</h2>
-                <p>上传清晰、主体完整的产品图片</p>
+                <h2>浜у搧鍥?/h2>
+                <p>涓婁紶娓呮櫚銆佷富浣撳畬鏁寸殑浜у搧鍥剧墖</p>
               </div>
               <div id="upload-count" class="upload-count">0/6</div>
             </div>
@@ -53,76 +52,76 @@
           <section class="panel-card">
             <div class="panel-head">
               <div>
-                <h2>组图要求</h2>
-                <p>描述您的产品信息和期望的图片风格</p>
+                <h2>缁勫浘瑕佹眰</h2>
+                <p>鎻忚堪鎮ㄧ殑浜у搧淇℃伅鍜屾湡鏈涚殑鍥剧墖椋庢牸</p>
               </div>
             </div>
 
             <textarea
               id="brief"
               rows="7"
-              placeholder="建议输入：产品名称、卖点、目标人群、详情图风格等&#10;&#10;例如：这是一款夏日特饮饮料，搭配柠檬，一口下去，爽战爽战。"
+              placeholder="寤鸿杈撳叆锛氫骇鍝佸悕绉般€佸崠鐐广€佺洰鏍囦汉缇ゃ€佽鎯呭浘椋庢牸绛?#10;&#10;渚嬪锛氳繖鏄竴娆惧鏃ョ壒楗ギ鏂欙紝鎼厤鏌犳锛屼竴鍙ｄ笅鍘伙紝鐖芥垬鐖芥垬銆?
             ></textarea>
 
             <div class="form-grid single">
               <label class="field">
-                <span>图片文案语言</span>
+                <span>鍥剧墖鏂囨璇█</span>
                 <select id="target-language">
-                  <option value="zh">中文</option>
+                  <option value="zh">涓枃</option>
                   <option value="en">English</option>
-                  <option value="es">Español</option>
+                  <option value="es">Espa帽ol</option>
                   <option value="de">Deutsch</option>
-                  <option value="pt">Português</option>
+                  <option value="pt">Portugu锚s</option>
                   <option value="it">Italiano</option>
-                  <option value="ru">Русский</option>
-                  <option value="ja">日本語</option>
-                  <option value="ko">한국어</option>
-                  <option value="fr">Français</option>
-                  <option value="ar">العربية</option>
-                  <option value="none">无文字</option>
+                  <option value="ru">袪褍褋褋泻懈泄</option>
+                  <option value="ja">鏃ユ湰瑾?/option>
+                  <option value="ko">頃滉淡鞏?/option>
+                  <option value="fr">Fran莽ais</option>
+                  <option value="ar">丕賱毓乇亘賷丞</option>
+                  <option value="none">鏃犳枃瀛?/option>
                 </select>
               </label>
             </div>
 
             <div class="form-grid two">
               <label class="field">
-                <span>模型</span>
+                <span>妯″瀷</span>
                 <select id="model">
-                  <option value="doubao-seedream-4-0-250828">豆包 Seedream 4.0</option>
+              <option value="doubao-seedream-4-0-250828">SB</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>尺寸比例</span>
+                <span>灏哄姣斾緥</span>
                 <select id="ratio">
-                  <option value="1:1">1:1 正方形</option>
-                  <option value="2:3">2:3 竖版</option>
-                  <option value="3:2">3:2 横版</option>
-                  <option value="4:5">4:5 竖版</option>
-                  <option value="16:9">16:9 宽屏</option>
-                  <option value="9:16">9:16 手机竖屏</option>
-                  <option value="21:9">21:9 超宽屏</option>
+                  <option value="1:1">1:1 姝ｆ柟褰?/option>
+                  <option value="2:3">2:3 绔栫増</option>
+                  <option value="3:2">3:2 妯増</option>
+                  <option value="4:5">4:5 绔栫増</option>
+                  <option value="16:9">16:9 瀹藉睆</option>
+                  <option value="9:16">9:16 鎵嬫満绔栧睆</option>
+                  <option value="21:9">21:9 瓒呭灞?/option>
                 </select>
               </label>
 
               <label class="field">
-                <span>清晰度</span>
+                <span>娓呮櫚搴?/span>
                 <select id="resolution">
-                  <option value="0.5K">0.5K 快速</option>
-                  <option value="1K" selected>1K 标准</option>
-                  <option value="2K">2K 高清</option>
-                  <option value="4K">4K 超清</option>
+                  <option value="0.5K">0.5K 蹇€?/option>
+                  <option value="1K" selected>1K 鏍囧噯</option>
+                  <option value="2K">2K 楂樻竻</option>
+                  <option value="4K">4K 瓒呮竻</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>生成数量</span>
+                <span>鐢熸垚鏁伴噺</span>
                 <select id="count">
-                  <option value="4">4 张</option>
-                  <option value="6">6 张</option>
-                  <option value="8">8 张</option>
-                  <option value="10">10 张</option>
-                  <option value="12">12 张</option>
+                  <option value="4">4 寮?/option>
+                  <option value="6">6 寮?/option>
+                  <option value="8">8 寮?/option>
+                  <option value="10">10 寮?/option>
+                  <option value="12">12 寮?/option>
                 </select>
               </label>
             </div>
@@ -131,8 +130,8 @@
           <section class="panel-card turbo-panel">
             <label class="turbo-row">
               <div class="turbo-copy">
-                <strong>Turbo 加速模式</strong>
-                <small>更快、更稳定。当前仅保留 UI，后续可扩展不同供应商模型。</small>
+                <strong>Turbo 鍔犻€熸ā寮?/strong>
+                <small>鏇村揩銆佹洿绋冲畾銆傚綋鍓嶄粎淇濈暀 UI锛屽悗缁彲鎵╁睍涓嶅悓渚涘簲鍟嗘ā鍨嬨€?/small>
               </div>
               <span class="switch-wrap">
                 <input id="turbo" type="checkbox" />
@@ -142,8 +141,8 @@
           </section>
 
           <section class="action-stack">
-            <button id="generate-btn" class="cta-button primary" disabled>确认生成</button>
-            <button id="analyze-btn" class="cta-button secondary">分析产品</button>
+            <button id="generate-btn" class="cta-button primary" disabled>纭鐢熸垚</button>
+            <button id="analyze-btn" class="cta-button secondary">鍒嗘瀽浜у搧</button>
           </section>
         </aside>
 
@@ -151,16 +150,16 @@
           <div class="result-panel">
             <div class="result-head">
               <div>
-                <p class="result-kicker">生成结果</p>
-                <h2 id="stage-title">等待输入</h2>
+                <p class="result-kicker">鐢熸垚缁撴灉</p>
+                <h2 id="stage-title">绛夊緟杈撳叆</h2>
               </div>
-              <p id="stage-desc">上传产品图并填写要求后，点击“分析产品”开始。</p>
+              <p id="stage-desc">涓婁紶浜у搧鍥惧苟濉啓瑕佹眰鍚庯紝鐐瑰嚮鈥滃垎鏋愪骇鍝佲€濆紑濮嬨€?/p>
             </div>
 
             <section id="debug-banner" class="debug-banner hidden" aria-live="polite"></section>
             <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
               <div class="progress-meta">
-                <strong id="progress-label">处理中</strong>
+                <strong id="progress-label">澶勭悊涓?/strong>
                 <span id="progress-value">0%</span>
               </div>
               <div class="progress-track">
@@ -173,42 +172,42 @@
                 <article class="info-card">
                   <div class="info-head">
                     <div>
-                      <h3>整体设计规范</h3>
-                      <p>所有图片遵循的统一视觉标准</p>
+                      <h3>鏁翠綋璁捐瑙勮寖</h3>
+                      <p>鎵€鏈夊浘鐗囬伒寰殑缁熶竴瑙嗚鏍囧噯</p>
                     </div>
                   </div>
-                  <pre id="design-specs" class="spec-output fixed-pane empty-state">分析后会显示整体设计规范。</pre>
+                  <pre id="design-specs" class="spec-output fixed-pane empty-state">鍒嗘瀽鍚庝細鏄剧ず鏁翠綋璁捐瑙勮寖銆?/pre>
                 </article>
 
                 <article class="info-card">
                   <div class="info-head">
                     <div>
-                      <h3>产品分析</h3>
-                      <p>来自视觉模型的产品理解</p>
+                      <h3>浜у搧鍒嗘瀽</h3>
+                      <p>鏉ヨ嚜瑙嗚妯″瀷鐨勪骇鍝佺悊瑙?/p>
                     </div>
                   </div>
-                  <pre id="product-summary" class="spec-output fixed-pane empty-state">上传产品图后会提取材质、颜色、标签和关键识别特征。</pre>
+                  <pre id="product-summary" class="spec-output fixed-pane empty-state">涓婁紶浜у搧鍥惧悗浼氭彁鍙栨潗璐ㄣ€侀鑹层€佹爣绛惧拰鍏抽敭璇嗗埆鐗瑰緛銆?/pre>
                 </article>
               </div>
 
               <article class="info-card">
                 <div class="info-head">
                   <div>
-                    <h3>图片规划</h3>
-                    <p>共多张图片，点击可编辑标题、描述和详细设计内容</p>
+                    <h3>鍥剧墖瑙勫垝</h3>
+                    <p>鍏卞寮犲浘鐗囷紝鐐瑰嚮鍙紪杈戞爣棰樸€佹弿杩板拰璇︾粏璁捐鍐呭</p>
                   </div>
                 </div>
-                <div id="plan-list" class="plan-list fixed-pane empty-state">分析后会生成每一张图的规划。</div>
+                <div id="plan-list" class="plan-list fixed-pane empty-state">鍒嗘瀽鍚庝細鐢熸垚姣忎竴寮犲浘鐨勮鍒掋€?/div>
               </article>
 
               <article class="info-card">
                 <div class="info-head">
                   <div>
-                    <h3>生成结果</h3>
-                    <p>展示最终生成图片</p>
+                    <h3>鐢熸垚缁撴灉</h3>
+                    <p>灞曠ず鏈€缁堢敓鎴愬浘鐗?/p>
                   </div>
                 </div>
-                <div id="result-grid" class="result-grid empty-state">生成图片后会显示在这里。</div>
+                <div id="result-grid" class="result-grid empty-state">鐢熸垚鍥剧墖鍚庝細鏄剧ず鍦ㄨ繖閲屻€?/div>
               </article>
             </div>
           </div>
