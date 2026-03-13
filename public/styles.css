@@ -684,51 +684,20 @@ textarea {
 }
 
 .result-card {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 14px;
-  padding: 12px;
-  border-radius: 24px;
+  display: block;
+  padding: 10px;
+  border-radius: 22px;
   border: 1px solid var(--line-soft);
   background: rgba(247, 248, 251, 0.88);
-  min-height: 540px;
 }
 
 .result-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  height: auto;
+  max-height: 640px;
+  object-fit: contain;
   border-radius: 18px;
   background: white;
-}
-
-.result-meta {
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 8px;
-  min-height: 0;
-}
-
-.result-meta strong {
-  font-size: 18px;
-  letter-spacing: -0.02em;
-}
-
-.result-meta p {
-  margin: 0;
-  color: var(--muted-strong);
-  line-height: 1.55;
-}
-
-.prompt-box {
-  height: 210px;
-  overflow: auto;
-  padding: 12px;
-  border-radius: 16px;
-  background: white;
-  color: var(--muted-strong);
-  font-size: 12px;
-  line-height: 1.6;
 }
 
 #plan-list.fixed-pane {

@@ -198,11 +198,6 @@ function renderResults(items) {
     card.className = "result-card";
     card.innerHTML = `
       <img src="${item.imageUrl}" alt="${escapeHtml(item.title)}" />
-      <div class="result-meta">
-        <strong>${escapeHtml(item.title)}</strong>
-        <p>${escapeHtml(item.description || "")}</p>
-        <div class="prompt-box">${escapeHtml(item.prompt || "")}</div>
-      </div>
     `;
     nodes.resultGrid.appendChild(card);
   });

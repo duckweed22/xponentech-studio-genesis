@@ -97,6 +97,7 @@ design_specs 必须包含：
 约束：
 - 必须忠实保留产品本身、包装、标签、logo、产品文字
 - 如果用户要求无字，则 Text Content 写 None，Font System 写 无
+- 如果用户没有选择无字，则 Text Content 必须包含可实际落到图片里的简洁营销文案
 - design_specs/title/description 使用中文
 - design_content 中的文案内容使用 {{target_language_name}}
 - 只输出 JSON
@@ -146,7 +147,8 @@ Hard constraints:
 Text layout rules:
 - Keep only literal display copy
 - Strip labels like Main Title:, Subtitle:, 主标题：
-- If the plan says no text, leave Text layout empty
+- If the target language is No Text or the plan says no text, leave Text layout empty
+- Otherwise, include short headline/subheadline style marketing copy in the requested target language
 
 Output rules:
 - JSON only
@@ -310,11 +312,16 @@ function targetLanguageName(targetLanguage) {
   const map = {
     zh: "中文",
     en: "English",
+    es: "Español",
+    de: "Deutsch",
+    pt: "Português",
+    it: "Italiano",
+    ru: "Русский",
     ja: "日本語",
     ko: "한국어",
     fr: "Français",
-    de: "Deutsch",
-    es: "Español"
+    ar: "العربية",
+    none: "No Text"
   };
   return map[targetLanguage] || targetLanguage || "中文";
 }
@@ -373,6 +380,7 @@ function ratioToSize(ratio, resolution) {
 
 function createFallbackBlueprint({ brief, count, targetLanguage, productSummary }) {
   const baseSummary = productSummary || "产品主体清晰、包装完整、适合电商详情页呈现";
+  const noText = targetLanguage === "none";
   const images = Array.from({ length: count }, (_, index) => ({
     title: `详情图 ${index + 1}`,
     description: `围绕核心卖点构建第 ${index + 1} 张场景图`,
@@ -383,7 +391,7 @@ function createFallbackBlueprint({ brief, count, targetLanguage, productSummary 
       index === 0 ? "Composition: 居中英雄构图，建立产品识别" : "Composition: 有层次的信息化构图，突出对比和节奏",
       `Display Focus / Selling Points: ${brief || "强调产品卖点、品质感与购买理由"}`,
       "Background / Decorations: 干净商业化背景，少量高质感装饰元素",
-      `Text Content: ${targetLanguage === "en" ? "Keep copy concise in English" : "根据卖点补充简洁文案"}`,
+      `Text Content: ${noText ? "None" : `以${targetLanguageName(targetLanguage)}输出简洁主标题和副标题`}`,
       "Atmosphere: 专业、可信、高级、适合电商转化"
     ].join("\n")
   }));
@@ -391,7 +399,11 @@ function createFallbackBlueprint({ brief, count, targetLanguage, productSummary 
   return {
     design_specs: [
       "Color System: 以产品主色为核心，辅以中性高级色",
-      targetLanguage === "en" ? "Font System: Clean Latin sans-serif for marketing copy" : "Font System: 干净现代的电商无衬线字体体系",
+      noText
+        ? "Font System: 无"
+        : targetLanguage === "en"
+          ? "Font System: Clean Latin sans-serif for marketing copy"
+          : "Font System: 干净现代的电商无衬线字体体系",
       "Visual Language: 高级电商海报风格，信息清晰，结构稳健",
       "Photography Style: 柔和商业布光，清楚展示材质与轮廓",
       `Quality Requirements: 高清、真实、统一，严格保持产品识别信息。Product summary: ${baseSummary}`
@@ -555,6 +567,9 @@ async function buildGenerationPrompts({ blueprint, brief, targetLanguage, produc
           "Critical identity rule: the generated image must preserve the exact product identity from the reference analysis and must not drift into another product category.",
           "Consistency rule: preserve silhouette, packaging geometry, closure type, label placement, logo region, dominant colors, and overall front-of-pack recognition in every output.",
           "Fallback rule: if scene styling conflicts with product fidelity, reduce scene complexity and keep the product exact.",
+          targetLanguage === "none"
+            ? "Text rule: do not render any text, letters, numbers, badges, slogans, or typographic elements anywhere in the image."
+            : "Text rule: render concise e-commerce headline and supporting copy directly inside the image in the requested target language.",
           `Planned images JSON:\n${JSON.stringify(blueprint.images.slice(0, count), null, 2)}`
         ].join("\n\n")
       }
