@@ -145,6 +145,8 @@
             <button id="generate-btn" class="cta-button primary" disabled>确认生成</button>
             <button id="analyze-btn" class="cta-button secondary">分析产品</button>
           </section>
+
+          <a class="pricing-link" href="#pricing">查看套餐与积分</a>
         </aside>
 
         <section class="result-column">
@@ -214,6 +216,262 @@
           </div>
         </section>
       </div>
+
+      <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+        <div class="pricing-header">
+          <p class="pricing-overline">Pricing</p>
+          <h2 id="pricing-title">赋能您的电商视觉</h2>
+          <p class="pricing-copy">灵活的积分系统。简单、可预测，并随您的业务规模扩展。</p>
+
+          <div class="pricing-balance">
+            <span class="pricing-balance-icon">&#9679;</span>
+            <div>
+              <span class="pricing-balance-label">总积分</span>
+              <strong class="pricing-balance-value">2</strong>
+            </div>
+          </div>
+
+          <div class="pricing-switch" role="tablist" aria-label="付费模式切换">
+            <button
+              type="button"
+              class="pricing-toggle is-active"
+              role="tab"
+              aria-selected="true"
+              data-pricing-toggle="subscription"
+            >
+              &#9819; 订阅套餐
+            </button>
+            <button
+              type="button"
+              class="pricing-toggle"
+              role="tab"
+              aria-selected="false"
+              data-pricing-toggle="credits"
+            >
+              &#9889; 购买积分
+            </button>
+            <div class="pricing-paymarks" aria-hidden="true">
+              <span class="paymark paymark-alipay">支</span>
+              <span class="paymark paymark-wechat">微</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pricing-plans is-active" data-pricing-panel="subscription">
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#9889;</span>
+              <h3>入门版</h3>
+            </div>
+            <p class="price-line"><strong>$5</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 250 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外 +12 积分</p>
+            <ul class="plan-features">
+              <li>~83 张 &#127820; 模型图片</li>
+              <li>~50 张 &#127820; Pro 模型图片</li>
+              <li>不过期，随时使用</li>
+              <li>一次购买，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="入门版订阅套餐">
+              立即选择
+            </button>
+          </article>
+
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#10022;</span>
+              <h3>专业版</h3>
+            </div>
+            <p class="price-line"><strong>$20</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 1200 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外 +60 积分</p>
+            <ul class="plan-features">
+              <li>~400 张 &#127820; 模型图片</li>
+              <li>~240 张 &#127820; Pro 模型图片</li>
+              <li>不过期，随时使用</li>
+              <li>一次购买，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="专业版订阅套餐">
+              立即选择
+            </button>
+          </article>
+
+          <article class="price-card featured">
+            <span class="featured-pill">最受欢迎</span>
+            <div class="price-card-top">
+              <span class="plan-icon">&#9819;</span>
+              <h3>企业版</h3>
+            </div>
+            <p class="price-line"><strong>$100</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 7000 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外 +350 积分</p>
+            <ul class="plan-features">
+              <li>~2333 张 &#127820; 模型图片</li>
+              <li>~1400 张 &#127820; Pro 模型图片</li>
+              <li>不过期，随时使用</li>
+              <li>一次购买，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="企业版订阅套餐">
+              立即选择
+            </button>
+          </article>
+
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#10025;</span>
+              <h3>豪华版</h3>
+            </div>
+            <p class="price-line"><strong>$500</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 38000 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外 +1900 积分</p>
+            <ul class="plan-features">
+              <li>~12666 张 &#127820; 模型图片</li>
+              <li>~7600 张 &#127820; Pro 模型图片</li>
+              <li>不过期，随时使用</li>
+              <li>一次购买，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="豪华版订阅套餐">
+              立即选择
+            </button>
+          </article>
+        </div>
+
+        <div class="pricing-plans" data-pricing-panel="credits" hidden>
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#9675;</span>
+              <h3>入门积分包</h3>
+            </div>
+            <p class="price-line"><strong>$5</strong><span>/一次性购买</span></p>
+            <p class="points-line">&#10003; 250 积分</p>
+            <p class="bonus-pill">&#10024; 购买即送 +12 积分</p>
+            <ul class="plan-features">
+              <li>~83 张 &#127820; 模型图片</li>
+              <li>~50 张 &#127820; Pro 模型图片</li>
+              <li>支持支付宝 / 微信</li>
+              <li>不过期，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="入门积分包">
+              立即购买
+            </button>
+          </article>
+
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#9671;</span>
+              <h3>专业积分包</h3>
+            </div>
+            <p class="price-line"><strong>$20</strong><span>/一次性购买</span></p>
+            <p class="points-line">&#10003; 1200 积分</p>
+            <p class="bonus-pill">&#10024; 购买即送 +60 积分</p>
+            <ul class="plan-features">
+              <li>~400 张 &#127820; 模型图片</li>
+              <li>~240 张 &#127820; Pro 模型图片</li>
+              <li>支持支付宝 / 微信</li>
+              <li>不过期，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="专业积分包">
+              立即购买
+            </button>
+          </article>
+
+          <article class="price-card featured">
+            <span class="featured-pill">最受欢迎</span>
+            <div class="price-card-top">
+              <span class="plan-icon">&#9673;</span>
+              <h3>企业积分包</h3>
+            </div>
+            <p class="price-line"><strong>$100</strong><span>/一次性购买</span></p>
+            <p class="points-line">&#10003; 7000 积分</p>
+            <p class="bonus-pill">&#10024; 购买即送 +350 积分</p>
+            <ul class="plan-features">
+              <li>~2333 张 &#127820; 模型图片</li>
+              <li>~1400 张 &#127820; Pro 模型图片</li>
+              <li>支持支付宝 / 微信</li>
+              <li>不过期，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="企业积分包">
+              立即购买
+            </button>
+          </article>
+
+          <article class="price-card">
+            <div class="price-card-top">
+              <span class="plan-icon">&#9678;</span>
+              <h3>豪华积分包</h3>
+            </div>
+            <p class="price-line"><strong>$500</strong><span>/一次性购买</span></p>
+            <p class="points-line">&#10003; 38000 积分</p>
+            <p class="bonus-pill">&#10024; 购买即送 +1900 积分</p>
+            <ul class="plan-features">
+              <li>~12666 张 &#127820; 模型图片</li>
+              <li>~7600 张 &#127820; Pro 模型图片</li>
+              <li>支持支付宝 / 微信</li>
+              <li>不过期，长期有效</li>
+            </ul>
+            <button type="button" class="plan-button" data-plan-action data-plan-label="豪华积分包">
+              立即购买
+            </button>
+          </article>
+        </div>
+
+        <p id="pricing-feedback" class="pricing-feedback hidden" aria-live="polite"></p>
+
+        <div class="pricing-benefits">
+          <div class="pricing-divider"></div>
+          <h3>所有计划均包含</h3>
+
+          <div class="benefit-grid">
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>AI 视觉策略</h4>
+              <p>智能提取 USP，打造高转化详情资产。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>适配全球平台</h4>
+              <p>为 Amazon、Shopify 和 TikTok Shop 量身定制。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>批量生产套件</h4>
+              <p>一键生成全套视觉资产。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>风格复刻引擎</h4>
+              <p>瞬间克隆任何参考设计的视觉风格。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>动态布局引擎</h4>
+              <p>针对移动端和桌面端详情页自动优化。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>旗舰级 AI 模型</h4>
+              <p>接入顶级模型，获得无可比拟的画面质感。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>4K 影棚级导出</h4>
+              <p>支持高清分辨率，满足印刷与数字展示需求。</p>
+            </article>
+
+            <article class="benefit-card">
+              <span class="benefit-icon">&#10003;</span>
+              <h4>云端历史记录</h4>
+              <p>随时访问所有生成记录。</p>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
 
     <template id="plan-item-template">

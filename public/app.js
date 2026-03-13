@@ -32,7 +32,11 @@ const nodes = {
   progressValue: document.querySelector("#progress-value"),
   progressFill: document.querySelector("#progress-fill"),
   stageNodes: [...document.querySelectorAll(".stage-node")],
-  planTemplate: document.querySelector("#plan-item-template")
+  planTemplate: document.querySelector("#plan-item-template"),
+  pricingFeedback: document.querySelector("#pricing-feedback"),
+  pricingToggles: [...document.querySelectorAll("[data-pricing-toggle]")],
+  pricingPanels: [...document.querySelectorAll("[data-pricing-panel]")],
+  pricingActions: [...document.querySelectorAll("[data-plan-action]")]
 };
 
 let progressTimer = null;
@@ -48,6 +52,28 @@ function hideDebug() {
   nodes.debugBanner.textContent = "";
   nodes.debugBanner.classList.add("hidden");
   nodes.debugBanner.classList.remove("is-error", "is-info");
+}
+
+function showPricingFeedback(message) {
+  if (!nodes.pricingFeedback) return;
+  nodes.pricingFeedback.textContent = message;
+  nodes.pricingFeedback.classList.remove("hidden");
+}
+
+function setPricingMode(mode) {
+  if (!nodes.pricingToggles.length || !nodes.pricingPanels.length) return;
+
+  nodes.pricingToggles.forEach((toggle) => {
+    const active = toggle.dataset.pricingToggle === mode;
+    toggle.classList.toggle("is-active", active);
+    toggle.setAttribute("aria-selected", String(active));
+  });
+
+  nodes.pricingPanels.forEach((panel) => {
+    const active = panel.dataset.pricingPanel === mode;
+    panel.classList.toggle("is-active", active);
+    panel.hidden = !active;
+  });
 }
 
 function setProgress(progress, label, options = {}) {
@@ -406,9 +432,29 @@ nodes.fileInput.addEventListener("change", async (event) => {
 nodes.analyzeBtn.addEventListener("click", handleAnalyze);
 nodes.generateBtn.addEventListener("click", handleGenerate);
 
+nodes.pricingToggles.forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const mode = toggle.dataset.pricingToggle;
+    setPricingMode(mode);
+    showPricingFeedback(
+      mode === "subscription"
+        ? "当前为展示版订阅套餐区，按钮仅用于页面演示，不会发起真实扣费。"
+        : "当前为展示版积分购买区，按钮仅用于页面演示，不会发起真实支付。"
+    );
+  });
+});
+
+nodes.pricingActions.forEach((button) => {
+  button.addEventListener("click", () => {
+    const label = button.dataset.planLabel || "当前套餐";
+    showPricingFeedback(`已打开 ${label} 的展示入口。当前版本仅保留定价展示，未接入真实支付。`);
+  });
+});
+
 renderUploadGallery();
 renderSpecs("");
 renderProductSummary("");
 resetResultsPlaceholder();
 setStage("input");
+setPricingMode("subscription");
 hideDebug();

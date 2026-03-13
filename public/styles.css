@@ -479,6 +479,28 @@ textarea {
   gap: 14px;
 }
 
+.pricing-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 0 20px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 14px 28px rgba(17, 18, 25, 0.06);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.pricing-link:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 32px rgba(17, 18, 25, 0.08);
+}
+
 .cta-button {
   width: 100%;
   min-height: 64px;
@@ -710,6 +732,361 @@ textarea {
   padding-right: 4px;
 }
 
+.pricing-section {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  margin-top: 88px;
+  padding: 12px 0 4px;
+}
+
+.pricing-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.pricing-overline {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.pricing-header h2 {
+  margin: 0;
+  font-size: clamp(42px, 5vw, 70px);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+}
+
+.pricing-copy {
+  max-width: 640px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.pricing-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 18px 32px rgba(17, 18, 25, 0.06);
+}
+
+.pricing-balance-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(180deg, #ffde7a 0%, #f4af27 100%);
+  color: #7c4d00;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.pricing-balance-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.pricing-balance-value {
+  display: block;
+  margin-top: 2px;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.pricing-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 26px;
+  border: 1px solid rgba(16, 17, 24, 0.06);
+  background: rgba(233, 234, 238, 0.62);
+}
+
+.pricing-toggle {
+  border: 0;
+  border-radius: 18px;
+  padding: 13px 22px;
+  background: transparent;
+  color: var(--muted-strong);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.pricing-toggle.is-active {
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 12px 24px rgba(17, 18, 25, 0.08);
+}
+
+.pricing-paymarks {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+.paymark {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.paymark-alipay {
+  background: #37a1ff;
+}
+
+.paymark-wechat {
+  background: #5bc868;
+}
+
+.pricing-plans {
+  display: none;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.pricing-plans.is-active {
+  display: grid;
+}
+
+.price-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100%;
+  padding: 30px 24px 24px;
+  border-radius: 30px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 22px 38px rgba(17, 18, 25, 0.06);
+}
+
+.price-card.featured {
+  border-width: 2px;
+  border-color: #13151c;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 26px 42px rgba(17, 18, 25, 0.12);
+}
+
+.featured-pill {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: #111219;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.price-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.plan-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(17, 18, 25, 0.05);
+  color: #111219;
+  font-size: 20px;
+}
+
+.price-card h3 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+
+.price-line strong {
+  font-size: 58px;
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+}
+
+.price-line span {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.points-line {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.bonus-pill {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(236, 174, 68, 0.4);
+  background: rgba(255, 216, 132, 0.18);
+  color: #ce7c00;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.plan-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.plan-features li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--muted-strong);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.plan-features li::before {
+  content: "\2713";
+  flex: 0 0 auto;
+  color: #111219;
+  font-weight: 800;
+}
+
+.plan-button {
+  margin-top: auto;
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.plan-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(17, 18, 25, 0.08);
+}
+
+.price-card.featured .plan-button {
+  background: linear-gradient(180deg, #1a1c26 0%, #101118 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.pricing-feedback {
+  max-width: 720px;
+  margin: -8px auto 0;
+  padding: 14px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(16, 17, 24, 0.08);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--muted-strong);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.pricing-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 10px;
+}
+
+.pricing-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(16, 17, 24, 0.1);
+}
+
+.pricing-benefits h3 {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(34px, 4vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.benefit-card {
+  padding: 24px 24px 22px;
+  border-radius: 26px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 28px rgba(17, 18, 25, 0.05);
+}
+
+.benefit-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(17, 18, 25, 0.05);
+  color: #111219;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.benefit-card h4 {
+  margin: 16px 0 10px;
+  font-size: 21px;
+  letter-spacing: -0.03em;
+}
+
+.benefit-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 @media (max-width: 1320px) {
   .workbench {
     grid-template-columns: 1fr;
@@ -717,6 +1094,11 @@ textarea {
 
   .workspace-row.dual {
     grid-template-columns: 1fr;
+  }
+
+  .pricing-plans,
+  .benefit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -738,6 +1120,15 @@ textarea {
     justify-content: center;
   }
 
+  .pricing-switch {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .price-line strong {
+    font-size: 48px;
+  }
+
   .form-grid.two,
   .plan-head {
     grid-template-columns: 1fr;
@@ -749,6 +1140,11 @@ textarea {
   .panel-card,
   .info-card {
     border-radius: 22px;
+  }
+
+  .pricing-plans,
+  .benefit-grid {
+    grid-template-columns: 1fr;
   }
 
   .result-head {
@@ -767,5 +1163,18 @@ textarea {
   .cta-button {
     min-height: 58px;
     font-size: 18px;
+  }
+
+  .pricing-header h2,
+  .pricing-benefits h3 {
+    font-size: 34px;
+  }
+
+  .price-card {
+    padding: 26px 20px 22px;
+  }
+
+  .pricing-copy {
+    font-size: 16px;
   }
 }
