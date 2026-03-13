@@ -106,10 +106,20 @@ textarea {
 
 .brand-mark {
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: 12px;
+  color: var(--muted);
+}
+
+.brand-name {
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--muted);
+}
+
+.brand-submark {
+  letter-spacing: 0.08em;
 }
 
 .page-hero h1 {

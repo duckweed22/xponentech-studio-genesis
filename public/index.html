@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>XponenTech Studio Genesis</title>
+    <title>XponenTech Studio Genesis | 幂为Ai视觉</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -14,25 +14,27 @@
       <header class="page-hero">
         <div class="hero-badge">
           <span class="hero-badge-dot"></span>
-          <span>XponenTech AI Product Visual Suite</span>
+          <span>XponenTech AI 电商视觉工作台</span>
         </div>
-        <p class="brand-mark">XponenTech</p>
-        <h1>Create Detail Image Sets in One Click</h1>
+        <p class="brand-mark">
+          <span class="brand-name">XponenTech</span>
+          <span class="brand-submark">幂为Ai视觉</span>
+        </p>
+        <h1>一键生成商品详情图</h1>
         <p class="hero-copy">
-          Upload your product image, let AI analyze the product identity, and generate
-          multi-angle, multi-scene e-commerce visuals for your detail page.
+          上传产品图片，让 AI 自动分析产品信息，快速生成多角度、多场景的电商详情视觉内容。
         </p>
 
-        <section class="stage-rail" aria-label="Generation stages">
-          <div class="stage-node active"><span>1</span><strong>Input</strong></div>
+        <section class="stage-rail" aria-label="生成阶段">
+          <div class="stage-node active"><span>1</span><strong>上传素材</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>2</span><strong>Analyzing</strong></div>
+          <div class="stage-node"><span>2</span><strong>分析产品</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>3</span><strong>Review Plan</strong></div>
+          <div class="stage-node"><span>3</span><strong>确认方案</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>4</span><strong>Generating</strong></div>
+          <div class="stage-node"><span>4</span><strong>生成图片</strong></div>
           <div class="stage-line"></div>
-          <div class="stage-node"><span>5</span><strong>Complete</strong></div>
+          <div class="stage-node"><span>5</span><strong>完成</strong></div>
         </section>
       </header>
 
@@ -41,8 +43,8 @@
           <section class="panel-card media-panel">
             <div class="panel-head compact">
               <div>
-                <h2>Product Images</h2>
-                <p>Upload clear product images with the full subject visible.</p>
+                <h2>产品图片</h2>
+                <p>上传清晰的产品图，尽量完整展示主体。</p>
               </div>
               <div id="upload-count" class="upload-count">0/6</div>
             </div>
@@ -54,76 +56,76 @@
           <section class="panel-card">
             <div class="panel-head">
               <div>
-                <h2>Creative Brief</h2>
-                <p>Describe your product, audience, and the visual direction you want.</p>
+                <h2>创意需求</h2>
+                <p>描述产品、受众以及你想要的视觉方向。</p>
               </div>
             </div>
 
             <textarea
               id="brief"
               rows="7"
-              placeholder="Recommended input: product name, selling points, target audience, desired visual style, preferred scenarios, and any required copy.&#10;&#10;Example: A premium summer beverage for young shoppers, refreshing lemon flavor, bright lifestyle scenes, and strong e-commerce conversion messaging."
+              placeholder="建议填写：产品名称、核心卖点、目标客户、想要的视觉风格、重点使用场景，以及需要嵌入图片里的文案。&#10;&#10;示例：面向年轻消费者的高端夏日饮品，主打清爽柠檬口味，画面明亮、生活感强，强调电商转化和详情页说服力。"
             ></textarea>
 
             <div class="form-grid single">
               <label class="field">
-                <span>Image Copy Language</span>
+                <span>图片文案语言</span>
                 <select id="target-language">
-                  <option value="en" selected>English</option>
-                  <option value="ar">Arabic</option>
-                  <option value="zh">Chinese</option>
-                  <option value="es">Spanish</option>
-                  <option value="de">German</option>
-                  <option value="pt">Portuguese</option>
-                  <option value="it">Italian</option>
-                  <option value="ru">Russian</option>
-                  <option value="ja">Japanese</option>
-                  <option value="ko">Korean</option>
-                  <option value="fr">French</option>
-                  <option value="none">No Text</option>
+                  <option value="en" selected>英文</option>
+                  <option value="ar">阿拉伯语</option>
+                  <option value="zh">中文</option>
+                  <option value="es">西班牙语</option>
+                  <option value="de">德语</option>
+                  <option value="pt">葡萄牙语</option>
+                  <option value="it">意大利语</option>
+                  <option value="ru">俄语</option>
+                  <option value="ja">日语</option>
+                  <option value="ko">韩语</option>
+                  <option value="fr">法语</option>
+                  <option value="none">无文字</option>
                 </select>
               </label>
             </div>
 
             <div class="form-grid two">
               <label class="field">
-                <span>Model</span>
+                <span>模型</span>
                 <select id="model">
                   <option value="doubao-seedream-4-0-250828">SB</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Aspect Ratio</span>
+                <span>画幅比例</span>
                 <select id="ratio">
-                  <option value="1:1">1:1 Square</option>
-                  <option value="2:3">2:3 Portrait</option>
-                  <option value="3:2">3:2 Landscape</option>
-                  <option value="4:5">4:5 Portrait</option>
-                  <option value="16:9">16:9 Wide</option>
-                  <option value="9:16">9:16 Mobile Portrait</option>
-                  <option value="21:9">21:9 Ultra Wide</option>
+                  <option value="1:1">1:1 方图</option>
+                  <option value="2:3">2:3 竖图</option>
+                  <option value="3:2">3:2 横图</option>
+                  <option value="4:5">4:5 竖版详情图</option>
+                  <option value="16:9">16:9 宽图</option>
+                  <option value="9:16">9:16 手机竖图</option>
+                  <option value="21:9">21:9 超宽图</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Resolution</span>
+                <span>清晰度</span>
                 <select id="resolution">
-                  <option value="0.5K">0.5K Fast</option>
-                  <option value="1K" selected>1K Standard</option>
-                  <option value="2K">2K High Definition</option>
-                  <option value="4K">4K Ultra Clear</option>
+                  <option value="0.5K">0.5K 极速</option>
+                  <option value="1K" selected>1K 标准</option>
+                  <option value="2K">2K 高清</option>
+                  <option value="4K">4K 超清</option>
                 </select>
               </label>
 
               <label class="field">
-                <span>Image Count</span>
+                <span>图片数量</span>
                 <select id="count">
-                  <option value="4">4 Images</option>
-                  <option value="6">6 Images</option>
-                  <option value="8">8 Images</option>
-                  <option value="10">10 Images</option>
-                  <option value="12">12 Images</option>
+                  <option value="4">4 张</option>
+                  <option value="6">6 张</option>
+                  <option value="8">8 张</option>
+                  <option value="10">10 张</option>
+                  <option value="12">12 张</option>
                 </select>
               </label>
             </div>
@@ -132,8 +134,8 @@
           <section class="panel-card turbo-panel">
             <label class="turbo-row">
               <div class="turbo-copy">
-                <strong>Turbo Mode</strong>
-                <small>Faster and steadier generation. The current release keeps the UI in place for future model routing.</small>
+                <strong>Turbo 模式</strong>
+                <small>生成更快、更稳。当前版本先保留这个开关，方便后续接入更多模型路由。</small>
               </div>
               <span class="switch-wrap">
                 <input id="turbo" type="checkbox" />
@@ -143,27 +145,27 @@
           </section>
 
           <section class="action-stack">
-            <button id="generate-btn" class="cta-button primary" disabled>Generate Images</button>
-            <button id="analyze-btn" class="cta-button secondary">Analyze Product</button>
+            <button id="generate-btn" class="cta-button primary" disabled>生成图片</button>
+            <button id="analyze-btn" class="cta-button secondary">分析产品</button>
           </section>
 
-          <a class="pricing-link" href="#pricing">View Plans & Credits</a>
+          <a class="pricing-link" href="#pricing">查看套餐与积分</a>
         </aside>
 
         <section class="result-column">
           <div class="result-panel">
             <div class="result-head">
               <div>
-                <p class="result-kicker">Results</p>
-                <h2 id="stage-title">Waiting for input</h2>
+                <p class="result-kicker">结果</p>
+                <h2 id="stage-title">等待输入</h2>
               </div>
-              <p id="stage-desc">Upload product images and fill in the brief, then click Analyze Product to begin.</p>
+              <p id="stage-desc">上传产品图并填写需求，然后点击“分析产品”开始。</p>
             </div>
 
             <section id="debug-banner" class="debug-banner hidden" aria-live="polite"></section>
             <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
               <div class="progress-meta">
-                <strong id="progress-label">Processing</strong>
+                <strong id="progress-label">处理中</strong>
                 <span id="progress-value">0%</span>
               </div>
               <div class="progress-track">
@@ -176,42 +178,42 @@
                 <article class="info-card">
                   <div class="info-head">
                     <div>
-                      <h3>Global Design Specs</h3>
-                      <p>The shared visual rules used across the full image set.</p>
+                      <h3>全局设计规范</h3>
+                      <p>整组图片共用的视觉规则会展示在这里。</p>
                     </div>
                   </div>
-                  <pre id="design-specs" class="spec-output fixed-pane empty-state">Design specs will appear here after analysis.</pre>
+                  <pre id="design-specs" class="spec-output fixed-pane empty-state">分析完成后，这里会展示全局设计规范。</pre>
                 </article>
 
                 <article class="info-card">
                   <div class="info-head">
                     <div>
-                      <h3>Product Analysis</h3>
-                      <p>The product understanding extracted from the vision model.</p>
+                      <h3>产品分析</h3>
+                      <p>这里会展示视觉模型提取出来的产品理解信息。</p>
                     </div>
                   </div>
-                  <pre id="product-summary" class="spec-output fixed-pane empty-state">Upload product images to extract material, color, label, and identity details.</pre>
+                  <pre id="product-summary" class="spec-output fixed-pane empty-state">上传产品图后，这里会提取材质、颜色、标签和主体特征。</pre>
                 </article>
               </div>
 
               <article class="info-card">
                 <div class="info-head">
                   <div>
-                    <h3>Image Plan</h3>
-                    <p>One card per output. Edit the title, description, and design instructions before generation.</p>
+                    <h3>图片方案</h3>
+                    <p>每张图对应一张方案卡，生成前可以修改标题、描述和设计说明。</p>
                   </div>
                 </div>
-                <div id="plan-list" class="plan-list fixed-pane empty-state">Image plans will appear here after analysis.</div>
+                <div id="plan-list" class="plan-list fixed-pane empty-state">分析完成后，这里会展示图片方案。</div>
               </article>
 
               <article class="info-card">
                 <div class="info-head">
                   <div>
-                    <h3>Generated Images</h3>
-                    <p>Your final generated image set will appear here.</p>
+                    <h3>生成结果</h3>
+                    <p>最终生成的图片会显示在这里。</p>
                   </div>
                 </div>
-                <div id="result-grid" class="result-grid empty-state">Generated images will appear here after completion.</div>
+                <div id="result-grid" class="result-grid empty-state">生成完成后，这里会展示结果图片。</div>
               </article>
             </div>
           </div>
@@ -220,19 +222,19 @@
 
       <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
         <div class="pricing-header">
-          <p class="pricing-overline">Pricing</p>
-          <h2 id="pricing-title">Powering Your E-Commerce Visuals</h2>
-          <p class="pricing-copy">A flexible credit system that stays simple, predictable, and ready to scale with your business.</p>
+          <p class="pricing-overline">套餐与积分</p>
+          <h2 id="pricing-title">让电商视觉生产更简单</h2>
+          <p class="pricing-copy">灵活的积分体系，简单、可预期，也能随着你的业务规模一起扩展。</p>
 
           <div class="pricing-balance">
             <span class="pricing-balance-icon">&#9679;</span>
             <div>
-              <span class="pricing-balance-label">Total Credits</span>
+              <span class="pricing-balance-label">总积分</span>
               <strong class="pricing-balance-value">2</strong>
             </div>
           </div>
 
-          <div class="pricing-switch" role="tablist" aria-label="Billing mode switch">
+          <div class="pricing-switch" role="tablist" aria-label="计费模式切换">
             <button
               type="button"
               class="pricing-toggle is-active"
@@ -240,7 +242,7 @@
               aria-selected="true"
               data-pricing-toggle="subscription"
             >
-              &#9819; Subscription Plans
+              &#9819; 订阅套餐
             </button>
             <button
               type="button"
@@ -249,7 +251,7 @@
               aria-selected="false"
               data-pricing-toggle="credits"
             >
-              &#9889; Buy Credits
+              &#9889; 购买积分
             </button>
             <div class="pricing-paymarks" aria-hidden="true">
               <span class="paymark paymark-alipay">A</span>
@@ -262,77 +264,77 @@
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#9889;</span>
-              <h3>Starter</h3>
+              <h3>入门版</h3>
             </div>
-            <p class="price-line"><strong>$5</strong><span>/month</span></p>
-            <p class="points-line">&#10003; 250 credits</p>
-            <p class="bonus-pill">&#10024; First subscription bonus: +12 credits</p>
+            <p class="price-line"><strong>$5</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 250 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外赠送 +12 积分</p>
             <ul class="plan-features">
-              <li>~83 standard model images</li>
-              <li>~50 Pro model images</li>
-              <li>No expiration, use anytime</li>
-              <li>One purchase, long-term value</li>
+              <li>约 83 张标准模型图片</li>
+              <li>约 50 张 Pro 模型图片</li>
+              <li>不过期，随时可用</li>
+              <li>一次订阅，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Starter subscription">
-              Choose Plan
+            <button type="button" class="plan-button" data-plan-action data-plan-label="入门版订阅">
+              立即选择
             </button>
           </article>
 
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#10022;</span>
-              <h3>Professional</h3>
+              <h3>专业版</h3>
             </div>
-            <p class="price-line"><strong>$20</strong><span>/month</span></p>
-            <p class="points-line">&#10003; 1200 credits</p>
-            <p class="bonus-pill">&#10024; First subscription bonus: +60 credits</p>
+            <p class="price-line"><strong>$20</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 1200 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外赠送 +60 积分</p>
             <ul class="plan-features">
-              <li>~400 standard model images</li>
-              <li>~240 Pro model images</li>
-              <li>No expiration, use anytime</li>
-              <li>One purchase, long-term value</li>
+              <li>约 400 张标准模型图片</li>
+              <li>约 240 张 Pro 模型图片</li>
+              <li>不过期，随时可用</li>
+              <li>一次订阅，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Professional subscription">
-              Choose Plan
+            <button type="button" class="plan-button" data-plan-action data-plan-label="专业版订阅">
+              立即选择
             </button>
           </article>
 
           <article class="price-card featured">
-            <span class="featured-pill">Most Popular</span>
+            <span class="featured-pill">最受欢迎</span>
             <div class="price-card-top">
               <span class="plan-icon">&#9819;</span>
-              <h3>Business</h3>
+              <h3>企业版</h3>
             </div>
-            <p class="price-line"><strong>$100</strong><span>/month</span></p>
-            <p class="points-line">&#10003; 7000 credits</p>
-            <p class="bonus-pill">&#10024; First subscription bonus: +350 credits</p>
+            <p class="price-line"><strong>$100</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 7000 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外赠送 +350 积分</p>
             <ul class="plan-features">
-              <li>~2333 standard model images</li>
-              <li>~1400 Pro model images</li>
-              <li>No expiration, use anytime</li>
-              <li>One purchase, long-term value</li>
+              <li>约 2333 张标准模型图片</li>
+              <li>约 1400 张 Pro 模型图片</li>
+              <li>不过期，随时可用</li>
+              <li>一次订阅，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Business subscription">
-              Choose Plan
+            <button type="button" class="plan-button" data-plan-action data-plan-label="企业版订阅">
+              立即选择
             </button>
           </article>
 
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#10025;</span>
-              <h3>Luxury</h3>
+              <h3>豪华版</h3>
             </div>
-            <p class="price-line"><strong>$500</strong><span>/month</span></p>
-            <p class="points-line">&#10003; 38000 credits</p>
-            <p class="bonus-pill">&#10024; First subscription bonus: +1900 credits</p>
+            <p class="price-line"><strong>$500</strong><span>/连续包月</span></p>
+            <p class="points-line">&#10003; 38000 积分</p>
+            <p class="bonus-pill">&#10024; 首次订阅额外赠送 +1900 积分</p>
             <ul class="plan-features">
-              <li>~12666 standard model images</li>
-              <li>~7600 Pro model images</li>
-              <li>No expiration, use anytime</li>
-              <li>One purchase, long-term value</li>
+              <li>约 12666 张标准模型图片</li>
+              <li>约 7600 张 Pro 模型图片</li>
+              <li>不过期，随时可用</li>
+              <li>一次订阅，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Luxury subscription">
-              Choose Plan
+            <button type="button" class="plan-button" data-plan-action data-plan-label="豪华版订阅">
+              立即选择
             </button>
           </article>
         </div>
@@ -341,77 +343,77 @@
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#9675;</span>
-              <h3>Starter Credit Pack</h3>
+              <h3>入门积分包</h3>
             </div>
-            <p class="price-line"><strong>$5</strong><span>/one-time</span></p>
-            <p class="points-line">&#10003; 250 credits</p>
-            <p class="bonus-pill">&#10024; Instant bonus: +12 credits</p>
+            <p class="price-line"><strong>$5</strong><span>/一次性</span></p>
+            <p class="points-line">&#10003; 250 积分</p>
+            <p class="bonus-pill">&#10024; 即时赠送 +12 积分</p>
             <ul class="plan-features">
-              <li>~83 standard model images</li>
-              <li>~50 Pro model images</li>
-              <li>Supports AliPay / WeChat</li>
-              <li>No expiration, long-term value</li>
+              <li>约 83 张标准模型图片</li>
+              <li>约 50 张 Pro 模型图片</li>
+              <li>支持支付宝 / 微信支付</li>
+              <li>不过期，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Starter credit pack">
-              Buy Now
+            <button type="button" class="plan-button" data-plan-action data-plan-label="入门积分包">
+              立即购买
             </button>
           </article>
 
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#9671;</span>
-              <h3>Professional Credit Pack</h3>
+              <h3>专业积分包</h3>
             </div>
-            <p class="price-line"><strong>$20</strong><span>/one-time</span></p>
-            <p class="points-line">&#10003; 1200 credits</p>
-            <p class="bonus-pill">&#10024; Instant bonus: +60 credits</p>
+            <p class="price-line"><strong>$20</strong><span>/一次性</span></p>
+            <p class="points-line">&#10003; 1200 积分</p>
+            <p class="bonus-pill">&#10024; 即时赠送 +60 积分</p>
             <ul class="plan-features">
-              <li>~400 standard model images</li>
-              <li>~240 Pro model images</li>
-              <li>Supports AliPay / WeChat</li>
-              <li>No expiration, long-term value</li>
+              <li>约 400 张标准模型图片</li>
+              <li>约 240 张 Pro 模型图片</li>
+              <li>支持支付宝 / 微信支付</li>
+              <li>不过期，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Professional credit pack">
-              Buy Now
+            <button type="button" class="plan-button" data-plan-action data-plan-label="专业积分包">
+              立即购买
             </button>
           </article>
 
           <article class="price-card featured">
-            <span class="featured-pill">Most Popular</span>
+            <span class="featured-pill">最受欢迎</span>
             <div class="price-card-top">
               <span class="plan-icon">&#9673;</span>
-              <h3>Business Credit Pack</h3>
+              <h3>企业积分包</h3>
             </div>
-            <p class="price-line"><strong>$100</strong><span>/one-time</span></p>
-            <p class="points-line">&#10003; 7000 credits</p>
-            <p class="bonus-pill">&#10024; Instant bonus: +350 credits</p>
+            <p class="price-line"><strong>$100</strong><span>/一次性</span></p>
+            <p class="points-line">&#10003; 7000 积分</p>
+            <p class="bonus-pill">&#10024; 即时赠送 +350 积分</p>
             <ul class="plan-features">
-              <li>~2333 standard model images</li>
-              <li>~1400 Pro model images</li>
-              <li>Supports AliPay / WeChat</li>
-              <li>No expiration, long-term value</li>
+              <li>约 2333 张标准模型图片</li>
+              <li>约 1400 张 Pro 模型图片</li>
+              <li>支持支付宝 / 微信支付</li>
+              <li>不过期，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Business credit pack">
-              Buy Now
+            <button type="button" class="plan-button" data-plan-action data-plan-label="企业积分包">
+              立即购买
             </button>
           </article>
 
           <article class="price-card">
             <div class="price-card-top">
               <span class="plan-icon">&#9678;</span>
-              <h3>Luxury Credit Pack</h3>
+              <h3>豪华积分包</h3>
             </div>
-            <p class="price-line"><strong>$500</strong><span>/one-time</span></p>
-            <p class="points-line">&#10003; 38000 credits</p>
-            <p class="bonus-pill">&#10024; Instant bonus: +1900 credits</p>
+            <p class="price-line"><strong>$500</strong><span>/一次性</span></p>
+            <p class="points-line">&#10003; 38000 积分</p>
+            <p class="bonus-pill">&#10024; 即时赠送 +1900 积分</p>
             <ul class="plan-features">
-              <li>~12666 standard model images</li>
-              <li>~7600 Pro model images</li>
-              <li>Supports AliPay / WeChat</li>
-              <li>No expiration, long-term value</li>
+              <li>约 12666 张标准模型图片</li>
+              <li>约 7600 张 Pro 模型图片</li>
+              <li>支持支付宝 / 微信支付</li>
+              <li>不过期，长期有效</li>
             </ul>
-            <button type="button" class="plan-button" data-plan-action data-plan-label="Luxury credit pack">
-              Buy Now
+            <button type="button" class="plan-button" data-plan-action data-plan-label="豪华积分包">
+              立即购买
             </button>
           </article>
         </div>
@@ -420,55 +422,55 @@
 
         <div class="pricing-benefits">
           <div class="pricing-divider"></div>
-          <h3>Everything Included in Every Plan</h3>
+          <h3>所有方案都包含</h3>
 
           <div class="benefit-grid">
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>AI Visual Strategy</h4>
-              <p>Extract unique selling points and turn them into high-converting detail visuals.</p>
+              <h4>AI 视觉策略</h4>
+              <p>自动提炼产品卖点，转化成更容易成交的详情视觉。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Global Platform Fit</h4>
-              <p>Tailored for Amazon, Shopify, and TikTok Shop storefronts.</p>
+              <h4>全球平台适配</h4>
+              <p>适配 Amazon、Shopify 与 TikTok Shop 等主流电商平台。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Batch Production Toolkit</h4>
-              <p>Generate a complete visual system for your product in one workflow.</p>
+              <h4>批量生产工具</h4>
+              <p>一次流程就能生成完整的商品视觉体系。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Style Cloning Engine</h4>
-              <p>Recreate the visual direction of reference designs with clean brand consistency.</p>
+              <h4>风格复刻引擎</h4>
+              <p>参考图风格可快速复刻，同时保持统一品牌感。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Adaptive Layout Engine</h4>
-              <p>Auto-optimizes compositions for mobile-first and desktop detail pages.</p>
+              <h4>自适应排版引擎</h4>
+              <p>自动优化移动端与桌面端详情页的画面布局。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Flagship AI Models</h4>
-              <p>Access top-tier models for sharper visuals, richer lighting, and stronger product fidelity.</p>
+              <h4>旗舰 AI 模型</h4>
+              <p>更清晰的画面、更丰富的光影，以及更稳定的产品还原能力。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>4K Studio Export</h4>
-              <p>Supports high-resolution output for digital campaigns, print, and marketplace assets.</p>
+              <h4>4K 高清导出</h4>
+              <p>支持更高分辨率输出，适用于广告投放、印刷和平台素材。</p>
             </article>
 
             <article class="benefit-card">
               <span class="benefit-icon">&#10003;</span>
-              <h4>Cloud History</h4>
-              <p>Review past generations anytime and keep your visual workflow organized.</p>
+              <h4>云端历史记录</h4>
+              <p>可随时回看历史生成结果，让你的视觉生产更有条理。</p>
             </article>
           </div>
         </div>
