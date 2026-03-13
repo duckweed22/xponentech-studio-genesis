@@ -7,6 +7,10 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "autofill": "node scripts/autofill.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.54.2"
   }
 }

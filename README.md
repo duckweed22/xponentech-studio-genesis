@@ -15,6 +15,41 @@ ARK_API_KEY=你的火山引擎ArkKey node server.js
 
 打开 [http://localhost:3000](http://localhost:3000)。
 
+## 自动化浏览器脚本
+
+如果你要模拟人工操作页面，可以用 Playwright 脚本自动：
+
+1. 打开页面
+2. 上传产品图
+3. 填写 brief
+4. 点击分析
+5. 点击生成
+6. 等待结果完成
+7. 自动下载生成图片到桌面文件夹
+
+运行示例：
+
+```bash
+npm run autofill -- \
+  --url=https://xponentech.zeabur.app/ \
+  --image=/absolute/path/to/mug.png \
+  --targetLanguage=中文 \
+  --ratio='4:5 竖版' \
+  --resolution='2K 高清' \
+  --count='6 张' \
+  --outputDir=/Users/leizi/Desktop/XponenTech-outputs \
+  --headless=false
+```
+
+参数说明：
+
+- `--image` 必填，必须是本机绝对路径
+- `--brief` 不填时会保持“组图描述”为空
+- `--outputDir` 不填时，会自动在桌面创建一个带时间戳的新文件夹
+- `--headless=false` 会打开真实浏览器，方便看执行过程
+- 第一次运行会自动安装缺少的 `npm` 依赖；如果本机没有 Chrome，也会尝试自动安装 Playwright Chromium
+- 其他参数都可以不填，脚本会用默认值
+
 ## Zeabur 部署
 
 这个项目可以直接从 GitHub 导入到 Zeabur。
